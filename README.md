@@ -5,6 +5,7 @@ The application provides an optimized path between a source and destination taki
 
 Architecture:
 The application is structured as a client-server architecture.
+
   Client functionality: 
   - Accept source, desitination, elevation preference, maximum alloweable deviation from shortest path.
   - Render a visually appealing map on the UI marking the most optimized path between the source and destination.
