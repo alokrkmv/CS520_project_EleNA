@@ -5,3 +5,11 @@ The application provides an optimized path between a source and destination taki
 
 Architecture:
 The application is structured as a client-server architecture.
+  Client functionality: 
+  - Accept source, desitination, elevation preference, maximum alloweable deviation from shortest path.
+  - Render a visually appealing map on the UI marking the most optimized path between the source and destination.
+  
+  Server functionality:
+  - Convert the source and destination to Latitue and logitayues for furhter processing.
+  - Generating a map involviding the source, destination and their genographic neighbourhood.
+  - Using above inputs to determine the optimized path and returning a unique path with associated details.
