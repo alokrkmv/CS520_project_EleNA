@@ -1,0 +1,5 @@
+src/main/server/map_generator/__pycache__/
+src/main/server/map_generator/cache/
+src/main/server/cache/
+src/main/server/elena_env/
+src/main/server/__pycache__/
