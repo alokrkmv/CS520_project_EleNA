@@ -3,3 +3,7 @@ src/main/server/map_generator/cache/
 src/main/server/cache/
 src/main/server/elena_env/
 src/main/server/__pycache__/
+src/main/server/path_finder/__pycache__/djikistra_path_finder.cpython-38.pyc
+src/main/server/path_finder/__pycache__/djikistra_path_finder.cpython-38.pyc
+cache/
+elena_env/
