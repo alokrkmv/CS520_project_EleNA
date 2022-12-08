@@ -34,14 +34,18 @@ Sample response:
 def fetch_route():
     try:
         req_data = request.json
-        data = ast.literal_eval(req_data)
+        data_dict = None
+        if type(req_data)==dict:
+            data_dict = req_data.get("data")
+        else:
+            data_dict = ast.literal_eval(req_data)
 
         
 
         # data_dict = data.get("data")
-        data_dict = data
+        # data_dict = data
         data_dict["percentage_length"] = int(data_dict["percentage_length"])
-        if data == None or data_dict == None:
+        if data_dict == None:
             return {"message":"Empty request body"}
         helper_obj = helper()
         # Validating the inpute for required fields
