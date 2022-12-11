@@ -4,7 +4,7 @@ from helper import helper
 import ast
 import logging
 from map_generator.generate_map import GenerateMap
-from path_finder.djikistra_path_finder import DjikstraPathFinder
+from path_finder.algorithm_selector import AlgorithmSelector
 from flask_cors import CORS
 logging.basicConfig(level = logging.INFO)
 app = Flask(__name__)
@@ -114,8 +114,8 @@ def fetch_route():
     elevation_gain = None
     # Default algorithm for path finding is djikistra
     if algorithm == None or "dji" in algorithm:
-        path_finder_object = DjikstraPathFinder()
-        route, dist, elevation_gain = path_finder_object.get_path(graph, nearest_node_source, nearest_node_destination, percentage_length, max_min )
+        algorithm_selector = AlgorithmSelector()
+        route, dist, elevation_gain = algorithm_selector.pick_algorithm(graph, nearest_node_source, nearest_node_destination, percentage_length, max_min )
         if route == None or dist == None or elevation_gain == None:
             logging.error("Something went wrong while trying to fetch required metrices for the given input")
             return {"message":"Something went wrong while trying to fetch required metrices for the given input!!! please try with a different input"}
