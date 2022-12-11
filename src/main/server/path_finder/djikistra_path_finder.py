@@ -76,7 +76,7 @@ class DjikstraPathFinder():
                     heapq.heappush(heap,(curr_cost,next_node))
                     path[next_node] = curr_node
                 
-
+        
 
         return self.generate_path_array(path, start_node, end_node)
 
@@ -104,7 +104,7 @@ class DjikstraPathFinder():
             while heap:
                 elevation,curr_node = heapq.heappop(heap)
                 if curr_node == end_node:
-                    if weights.get(curr_node,0)<= (percentage_length)/100.0*min_distance:
+                    if weights.get(curr_node,0)<= (percentage_length*min_distance)/100:
                         break
                 for _,next_node,_ in graph.edges(curr_node, data=True):
                     new_cost = weights.get(curr_node,0) + graph.edges[curr_node, next_node, 0]['length']
