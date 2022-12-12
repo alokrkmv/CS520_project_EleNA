@@ -170,25 +170,71 @@
 <dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">path_finder.a_star_path_finder.</span></span><span class="sig-name descname"><span class="pre">AStarPathFinder</span></span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class implements a modified version of Astar shortest path
+algorithm to find a suitable path satisfiying percetange path length and 
+elevation gain requirement of the client</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder.getNextNode">
-<span class="sig-name descname"><span class="pre">getNextNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_costs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder.getNextNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder.getNextNode" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder.find_next_node">
+<span class="sig-name descname"><span class="pre">find_next_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_costs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder.find_next_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder.find_next_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function finds the next node with mimimum cost from the current node</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>nodes (list[node]): An array of nodes
+node_cost (dict): Cost metrix</p>
+</dd>
+<dt>Returns:</dt><dd><p>osmnx.graph.node: Returns the next node with minimum cost</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder.get_coordinates">
 <span class="sig-name descname"><span class="pre">get_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder.get_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder.get_coordinates" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This function finds x and y coordinates for each node in the path</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+path list[node]: A list of nodes from source to destination representing the path from source to destination</p>
+</dd>
+<dt>Returns:</dt><dd><p>coord: Returns an array of tuples where each tuple corresponds to x and y co-ordinate of the corrsponding path node</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder.get_path">
 <span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_max_gain</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder.get_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder.get_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="simple">
+<dt>This function returns most optimal path between a given source and destination node for a given input paramater</dt><dd><p>We are using a modified version of A* to find the most optimal path for given source and destination combination 
+considering user’s preference for elevation gain and maximum path length.
+Distance from one node to another is the edge weight</p>
+</dd>
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+start (osmnx.graph.node): Source node
+end (osmnx.graph.node): Destination node
+percentage_length (int): Maximum percentage length above the shortest path length user is willing to go
+min_max_gain (str): User’s choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain
+min means user wants to minimize elevation gain</p>
+</dd>
+<dt>Returns:</dt><dd><p>list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user’s input
+float: length of the path
+float: elevation gain across the path</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder.heuristic_function">
 <span class="sig-name descname"><span class="pre">heuristic_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder.heuristic_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder.heuristic_function" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="simple">
+<dt>As A* is a heuristic based path finder algorithm we need to have a heuristic function. This is a simple heuristic</dt><dd><p>function which finds shortest possible distance (Eculedian distance) between source and destination</p>
+</dd>
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+start (osmnx.graph.node): First Node
+end (osmnx.graph.node): Second Node</p>
+</dd>
+<dt>Returns:</dt><dd><p>float: Eculidian distance between two nodes</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
