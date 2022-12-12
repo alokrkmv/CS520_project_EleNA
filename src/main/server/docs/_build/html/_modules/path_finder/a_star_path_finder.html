@@ -148,25 +148,87 @@
 
 <span class="sd">&#39;&#39;&#39;</span>
 <div class="viewcode-block" id="AStarPathFinder"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder">[docs]</a><span class="k">class</span> <span class="nc">AStarPathFinder</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;This class implements a modified version of Astar shortest path</span>
+<span class="sd">        algorithm to find a suitable path satisfiying percetange path length and </span>
+<span class="sd">        elevation gain requirement of the client</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span> <span class="o">=</span> <span class="n">DjikstraPathFinder</span><span class="p">()</span>
       
 
-    <span class="c1"># Our heuristic function is a simple eculedian distance between two points as we</span>
-    <span class="c1"># know Eculidian distance between two points is the shortest distance between two points</span>
 <div class="viewcode-block" id="AStarPathFinder.heuristic_function"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.heuristic_function">[docs]</a>    <span class="k">def</span> <span class="nf">heuristic_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">graph</span><span class="p">,</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;As A* is a heuristic based path finder algorithm we need to have a heuristic function. This is a simple heuristic</span>
+<span class="sd">            function which finds shortest possible distance (Eculedian distance) between source and destination</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            start (osmnx.graph.node): First Node</span>
+<span class="sd">            end (osmnx.graph.node): Second Node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Eculidian distance between two nodes</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="p">((</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">end</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">end</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span></div>
     
-<div class="viewcode-block" id="AStarPathFinder.getNextNode"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.getNextNode">[docs]</a>    <span class="k">def</span> <span class="nf">getNextNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nodes</span><span class="p">,</span> <span class="n">node_costs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">node_costs</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span></div>
+<div class="viewcode-block" id="AStarPathFinder.find_next_node"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.find_next_node">[docs]</a>    <span class="k">def</span> <span class="nf">find_next_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nodes</span><span class="p">,</span> <span class="n">node_costs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function finds the next node with mimimum cost from the current node</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nodes (list[node]): An array of nodes</span>
+<span class="sd">            node_cost (dict): Cost metrix</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            osmnx.graph.node: Returns the next node with minimum cost</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">min_cost</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="n">next_node</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">node_costs</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">cost</span> <span class="o">&lt;</span> <span class="n">min_cost</span><span class="p">:</span>
+                <span class="n">min_cost</span> <span class="o">=</span> <span class="n">cost</span>
+                <span class="n">next_node</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="k">return</span> <span class="n">next_node</span></div>
 
 <div class="viewcode-block" id="AStarPathFinder.get_coordinates"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.get_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">get_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function finds x and y coordinates for each node in the path</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            path list[node]: A list of nodes from source to destination representing the path from source to destination</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            coord: Returns an array of tuples where each tuple corresponds to x and y co-ordinate of the corrsponding path node</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">coord</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
             <span class="n">coord</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]))</span>
         <span class="k">return</span> <span class="n">coord</span></div>
 
 <div class="viewcode-block" id="AStarPathFinder.get_path"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.get_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">percentage_length</span><span class="p">,</span> <span class="n">min_max_gain</span><span class="p">):</span>
+
+        <span class="sd">&#39;&#39;&#39;This function returns most optimal path between a given source and destination node for a given input paramater</span>
+<span class="sd">            We are using a modified version of A* to find the most optimal path for given source and destination combination </span>
+<span class="sd">            considering user&#39;s preference for elevation gain and maximum path length.</span>
+<span class="sd">            Distance from one node to another is the edge weight</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            start (osmnx.graph.node): Source node</span>
+<span class="sd">            end (osmnx.graph.node): Destination node</span>
+<span class="sd">            percentage_length (int): Maximum percentage length above the shortest path length user is willing to go</span>
+<span class="sd">            min_max_gain (str): User&#39;s choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain</span>
+<span class="sd">            min means user wants to minimize elevation gain</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user&#39;s input</span>
+<span class="sd">            float: length of the path</span>
+<span class="sd">            float: elevation gain across the path</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">is_max</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">min_max_gain</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
             <span class="n">is_max</span> <span class="o">=</span> <span class="kc">True</span>
@@ -181,7 +243,6 @@
         <span class="n">parent</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">parent</span><span class="p">[</span><span class="n">start</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c1"># node_costs</span>
         <span class="n">cost_martix</span> <span class="o">=</span> <span class="p">{}</span> 
         <span class="n">cost_martix</span><span class="p">[</span><span class="n">start</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">cost_martix</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
@@ -190,7 +251,7 @@
         <span class="n">all_routes</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">while</span> <span class="n">begin</span><span class="p">:</span>
-            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNextNode</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span><span class="n">cost_martix</span><span class="p">)</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_next_node</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span><span class="n">cost_martix</span><span class="p">)</span>
             <span class="n">begin</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">current</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">cost_martix</span><span class="p">[</span><span class="n">current</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">percentage_length</span><span class="o">*</span><span class="n">min_distance</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="p">:</span>
@@ -202,7 +263,10 @@
                     <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
                     <span class="n">elevation_gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span><span class="o">.</span><span class="n">get_net_elevations</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-                    <span class="n">path_elevation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">elevation_gain</span> <span class="k">if</span> <span class="n">is_max</span> <span class="k">else</span> <span class="n">elevation_gain</span>
+                    <span class="n">path_elevation</span> <span class="o">=</span> <span class="n">elevation_gain</span>
+                    <span class="k">if</span> <span class="n">is_max</span><span class="p">:</span>
+                        <span class="n">path_elevation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">elevation_gain</span>
+
                     <span class="n">path_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span><span class="o">.</span><span class="n">get_path_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
                     <span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_coordinates</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
                     <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">all_routes</span><span class="p">,</span> <span class="p">(</span><span class="n">path_elevation</span><span class="p">,</span> <span class="n">path_length</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">))</span>
