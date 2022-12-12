@@ -2,37 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
     <title>Elena</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVdyePhhYFnn5-jJP5jCaO4NBuR_c_ADE&libraries=places"></script>
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="style.css", rel = "stylesheet">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="serialize_json.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 <body>
 <div class="container contact-form">
-            <div class="contact-image">
-                <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>
-            </div>
-            <form method="post" name="myform" id="myform">
+<!--            <div class="contact-image">-->
+<!--                <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>-->
+<!--            </div>-->
+            <form method="post" name="myform" id="myform" class="login-box">
                 <h3>ELENA</h3>
                <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
-                                <select id="max_min" class="form-control" name="max_min">
-                                  <option value="" disabled selected>Min Max</option>
-                                  <option value = "min" >min</option>
-                                  <option  value = "max">max</option>
-                                </select>
-                        </div>
-                        <div class="form-group">
-                            <input id="autocomplete_source" name="source" type="text" class="form-control" placeholder="Source Address" />
+                        <div class="user-box">
+                            <input id="autocomplete_source" name="source" type="text" class="form-control" />
+                            <label>Source Address</label>
                             <script>
                               google.maps.event.addDomListener(window, 'load', initializeAutoSource);
                                 function initializeAutoSource() {
@@ -44,8 +37,9 @@
                               }
                             </script>
                         </div>
-                        <div class="form-group">
-                            <input id="autocomplete_dest" name="destination" type="text" class="form-control" placeholder="Destination Address" />
+                        <div class="user-box">
+                            <input id="autocomplete_dest" name="destination" type="text" class="form-control" />
+                            <label>Destination Address</label>
                             <script>
                               google.maps.event.addDomListener(window, 'load', initializeAutoDest);
                                 function initializeAutoDest() {
@@ -58,21 +52,50 @@
                             </script>
                         </div>
                         <div class="form-group">
-                            <input type="number" name="percentage_length" class="form-control" placeholder="Percentage" value="" />
+                            <br><br>
+                            <label class="rad-text ">Elevation Percentage : </label>
                         </div>
-
-                        <div class="form-group">
-                            <input type="submit" name="btnSubmit" class="btnContact" value="Fetch Route" id="submitform"/>
-                        </div>
-
 
                     </div>
-
                     <div class="col-md-6">
-                        <div id="map" style="width:600px; height: 400px;"></div>
+                        <div class="form-group">
+                        <label class="rad-label">
+                        <input type="radio" class="rad-input" name="max_min" value="min">
+                        <div class="rad-design"></div>
+                        <div class="rad-text">Min</div>
+                        </label>
+
+                        <label class="rad-label">
+                        <input type="radio" class="rad-input" name="max_min" value="max">
+                        <div class="rad-design"></div>
+                        <div class="rad-text">Max</div>
+                        </label>
+                    </div>
+                        <div class="form-group">
+                            <div class="value">125%</div>
+                            <input id="percentage_length" type="range" min="100" max="200" value="125" name="percentage_length">
+                            <script>
+                                var elem = document.querySelector('input[type="range"]');
+                                var rangeValue = function(){
+                                  var newValue = elem.value;
+                                  var target = document.querySelector('.value');
+                                  target.innerHTML = newValue+'%';
+                                }
+                                elem.addEventListener("input", rangeValue);
+                            </script>
+                        </div>
                     </div>
                 </div>
+                <br><br><br>
+                <div class="form-group">
+                            <input type="submit" name="btnSubmit" class="button-29" value="Fetch Route" id="submitform"/>
+                </div>
             </form>
+
+     <div class="form-group">
+        <div id="map" class="map"></div>
+     </div>
+
 </div>
 <script src="script.js"></script>
 </body>
