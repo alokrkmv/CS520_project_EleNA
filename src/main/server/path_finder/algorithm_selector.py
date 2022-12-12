@@ -19,8 +19,8 @@ class AlgorithmSelector:
             nearest_node_source (osmnx.graph.node): Source node nearest to the given source
             nearest_node_destination (osmnx.graph.node): Destination node nearest to the given destination
             percentage_length (int): Maximum percentage length above the shortest path length user is willing to go
-            min_max (str): User's choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain
-                                min means user wants to minimize elevation gain
+            min_max (str): User's choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain 
+            min means user wants to minimize elevation gain
 
         Returns:
             list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user's input

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>map_generator.generate_map</title>
+    
+          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../_static/theme-vendors.js"></script> -->
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../modules.html#server">server</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../helper.html" class="reference internal ">helper module</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../map_generator.html" class="reference internal ">map_generator package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../path_finder.html" class="reference internal ">path_finder package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>map_generator.generate_map</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <h1>Source code for map_generator.generate_map</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pkl</span>
+<span class="kn">import</span> <span class="nn">osmnx</span> <span class="k">as</span> <span class="nn">ox</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="kn">from</span> <span class="nn">geopy.geocoders</span> <span class="kn">import</span> <span class="n">Nominatim</span>
+
+<span class="kn">from</span> <span class="nn">osmnx</span> <span class="kn">import</span> <span class="n">downloader</span>
+<span class="kn">from</span> <span class="nn">osmnx</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<div class="viewcode-block" id="GenerateMap"><a class="viewcode-back" href="../../map_generator.html#map_generator.generate_map.GenerateMap">[docs]</a><span class="k">class</span> <span class="nc">GenerateMap</span><span class="p">:</span>
+
+    <span class="sd">&#39;&#39;&#39;This class is responsible for generating the map of city in which source and destination lies. It also saves the generated map into the</span>
+<span class="sd">        cache in case of cache miss and serves the map from cache in case of case hit</span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geolocator</span> <span class="o">=</span> <span class="n">Nominatim</span><span class="p">(</span><span class="n">user_agent</span> <span class="o">=</span> <span class="s2">&quot;project_elena&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;generated_maps/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">pass</span>
+    
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Using the osmnx graph plotter to generate the plot of the graph</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GenerateMap.generateGraphPlot"><a class="viewcode-back" href="../../map_generator.html#map_generator.generate_map.GenerateMap.generateGraphPlot">[docs]</a>    <span class="k">def</span> <span class="nf">generateGraphPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function plots the map using osmnx default graph plotter and saves it as a jpg image</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The map to be plotted</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">ox</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Generating graph based on elevation !&#39;</span><span class="p">)</span>
+        <span class="n">ox</span><span class="o">.</span><span class="n">plot_graph</span><span class="p">(</span><span class="n">G</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">bgcolor</span> <span class="o">=</span> <span class="s2">&quot;#FFFFFF&quot;</span><span class="p">,</span><span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;#0000FF&#39;</span><span class="p">,</span> <span class="n">edge_linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image_path</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+   
+<div class="viewcode-block" id="GenerateMap.getLocationInfo"><a class="viewcode-back" href="../../map_generator.html#map_generator.generate_map.GenerateMap.getLocationInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getLocationInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This method fetches city, state and lat-long info for a particular address. City and state is fetched by parsing the address data</span>
+<span class="sd">            while latitude and longitude is fetched using geopy library.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            location (str): Address for which location data needs to be fetched</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            dict: A dictionary consisting {&quot;lat&quot;:&lt;latitude &lt;str&gt;&gt;,</span>
+<span class="sd">                                           &quot;long&quot;:&lt;longitude &lt;str&gt;&gt;,</span>
+<span class="sd">                                           &quot;city&quot;:&lt;str&gt;,</span>
+<span class="sd">                                           &quot;state&quot;:&lt;str&gt;}</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">location_info</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">geolocator</span><span class="o">.</span><span class="n">geocode</span><span class="p">(</span><span class="n">location</span><span class="p">)</span><span class="o">.</span><span class="n">latitude</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;long&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">geolocator</span><span class="o">.</span><span class="n">geocode</span><span class="p">(</span><span class="n">location</span><span class="p">)</span><span class="o">.</span><span class="n">longitude</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;city&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location_info</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">params</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong in fetching location info for given location&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">params</span></div>
+            
+    
+   
+<div class="viewcode-block" id="GenerateMap.generateMap"><a class="viewcode-back" href="../../map_generator.html#map_generator.generate_map.GenerateMap.generateMap">[docs]</a>    <span class="k">def</span> <span class="nf">generateMap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This method generates map of the city and state with elevation info attached to each node</span>
+<span class="sd">            For getting the elevation info we are using open elevation API which is free version of Google&#39;s elevation API</span>
+<span class="sd">            For generating the map we wil be using osmnx map generator.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                city(str): City</span>
+<span class="sd">                state(str): State</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">city</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;generated_maps/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;generated_maps/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2">.png&quot;</span>
+
+        <span class="c1"># If the map is already present in the cache then serve from cache</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The Graph for city </span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2"> and state </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2"> is served from cache&quot;</span><span class="p">)</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">graph</span> <span class="o">=</span> <span class="n">pkl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span><span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plotting the graph for city </span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2"> state </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">generateGraphPlot</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph generated successfuly however plotting failed!!! Aborting plot generation!!!&quot;</span><span class="p">)</span>
+                <span class="k">finally</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">graph</span><span class="p">,</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong while trying to load the graph with error </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">graph</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">city</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;USA&#39;</span>
+
+            <span class="c1"># Generate the city state map using osmnx map generator if the graph is not already present in the cache</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">graph_from_place</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">network_type</span><span class="o">=</span><span class="s1">&#39;bike&#39;</span><span class="p">)</span>
+            <span class="c1"># Adding elevation data</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_node_elevations_open</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+            
+            <span class="c1">#Add grade attribute to each graph edge.</span>
+            <span class="c1">#Vectorized function to calculate the directed grade (ie, rise over run) for each edge in the graph and add it to the edge as an attribute. </span>
+            <span class="c1">#Nodes must already have elevation attributes to use this function.</span>
+            
+            <span class="n">graph</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">add_edge_grades</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding the generated graph for city </span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2"> state </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2"> in cache&quot;</span><span class="p">)</span>
+                <span class="n">pkl</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caching the graph failed with error </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">!!&quot;</span><span class="p">)</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">generateGraphPlot</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph generated successfuly however plotting failed!!! Aborting plot generation!!!&quot;</span><span class="p">)</span>
+                <span class="k">finally</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">graph</span><span class="p">,</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unable to generate Map for city </span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2"> and state </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2"> from osmnx with error </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">graph</span><span class="p">,</span> <span class="kc">False</span></div>
+
+   
+<div class="viewcode-block" id="GenerateMap.add_node_elevations_open"><a class="viewcode-back" href="../../map_generator.html#map_generator.generate_map.GenerateMap.add_node_elevations_open">[docs]</a>    <span class="k">def</span> <span class="nf">add_node_elevations_open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">max_locations_per_batch</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
+                             <span class="n">pause_duration</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+
+        <span class="sd">&#39;&#39;&#39;Osmnx provides method get_node_elevation_google which attaches elevation data to each node of the generated graph</span>
+<span class="sd">            using Google&#39;s elevation API. Although Google&#39;s elevation API is not free, hence here we have modified this</span>
+<span class="sd">            function to use open-elevation API which is an open source version of Google&#39;s elevation API.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add `elevation` (meters) attribute to each node using a web service.</span>
+<span class="sd">        This uses the Open Elevation API and hence doesn&#39;t require any API key.</span>
+<span class="sd">        See also the `add_edge_grades` function.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        G : networkx.MultiDiGraph</span>
+<span class="sd">            input graph</span>
+<span class="sd">        api_key : string</span>
+<span class="sd">            a Google Maps Elevation API key</span>
+<span class="sd">        max_locations_per_batch : int</span>
+<span class="sd">            max number of coordinate pairs to submit in each API call (if this is</span>
+<span class="sd">            too high, the server will reject the request because its character</span>
+<span class="sd">            limit exceeds the max allowed)</span>
+<span class="sd">        pause_duration : float</span>
+<span class="sd">            time to pause between API calls, which can be increased if you get</span>
+<span class="sd">            rate limited</span>
+<span class="sd">        precision : int</span>
+<span class="sd">            decimal precision to round elevation values</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        G : networkx.MultiDiGraph</span>
+<span class="sd">            graph with node elevation attributes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">url_template</span> <span class="o">=</span> <span class="s1">&#39;https://api.open-elevation.com/api/v1/lookup?locations=</span><span class="si">{}</span><span class="s1">&#39;</span>
+
+        <span class="n">node_points</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+        <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.5f</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.5f</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)}</span>
+        <span class="p">)</span>
+        <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">node_points</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_locations_per_batch</span><span class="p">))</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Requesting node elevations from the API in </span><span class="si">{</span><span class="n">n_calls</span><span class="si">}</span><span class="s2"> calls&quot;</span><span class="p">)</span>
+
+        <span class="c1"># break the series of coordinates into chunks of size max_locations_per_batch</span>
+        <span class="c1"># API format is locations=lat,lng|lat,lng|lat,lng|lat,lng...</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_points</span><span class="p">),</span> <span class="n">max_locations_per_batch</span><span class="p">):</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">node_points</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">max_locations_per_batch</span><span class="p">]</span>
+            <span class="n">locations</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">url_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span>
+
+            <span class="c1"># check if this request is already in the cache (if global use_cache=True)</span>
+            <span class="n">cached_response_json</span> <span class="o">=</span> <span class="n">downloader</span><span class="o">.</span><span class="n">_retrieve_from_cache</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cached_response_json</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">response_json</span> <span class="o">=</span> <span class="n">cached_response_json</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># request the elevations from the API</span>
+                    <span class="n">utils</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Requesting node elevations: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">pause_duration</span><span class="p">)</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+                    <span class="n">response_json</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                    <span class="n">downloader</span><span class="o">.</span><span class="n">_save_to_cache</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">response_json</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">utils</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="n">utils</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Server responded with </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># append these elevation results to the list of all results</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">response_json</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">])</span>
+
+        <span class="c1"># sanity check that all our vectors have the same number of elements</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_points</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Graph has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes but we received </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> results from elevation API&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Graph has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes and we received </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> results from elevation API&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># add elevation as an attribute to the nodes</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">node_points</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;node_points&quot;</span><span class="p">])</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;elevation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;elevation&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;elevation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;elevation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">precision</span><span class="p">)</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">set_node_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;elevation&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;elevation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Added elevation data from Google to all nodes.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">G</span></div></div>
+
+
+
+
+
+
+    
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

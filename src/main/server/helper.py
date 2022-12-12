@@ -1,9 +1,9 @@
 import logging
 import osmnx as ox
 logging.basicConfig(level = logging.INFO)
-'''
-This is a helper class which contains helper functions to make sure
-that can be used for performing different tasks.
+'''This is a helper class which contains helper functions to make sure
+    that can be used for performing different tasks.
+    
 '''
 
 class helper:

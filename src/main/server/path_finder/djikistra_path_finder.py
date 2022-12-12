@@ -101,8 +101,7 @@ class DjikstraPathFinder:
         return elevation
 
     def get_shortest_path(self,graph, start_node, end_node):
-        '''
-            This function returns shortest path between a given source and destination node
+        '''This function returns shortest path between a given source and destination node
             We are using Djikistra algorithm to find shortest path between two nodes.
             Distance from one node to another is the edge weight
         
@@ -113,6 +112,7 @@ class DjikstraPathFinder:
 
         Returns:
             list[nodes]: A list of nodes from source to destination represting the shortest possible path from source to destination
+
         '''
         heap = []
         heapq.heapify(heap)
@@ -151,7 +151,7 @@ class DjikstraPathFinder:
             end_node (osmnx.graph.node): Destination node
             percentage_length (int): Maximum percentage length above the shortest path length user is willing to go
             min_max_gain (str): User's choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain
-                                min means user wants to minimize elevation gain
+            min means user wants to minimize elevation gain
 
         Returns:
             list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user's input

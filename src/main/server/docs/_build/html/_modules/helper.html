@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>helper</title>
+    
+          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../_static/theme-vendors.js"></script> -->
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../modules.html#server">server</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../helper.html" class="reference internal ">helper module</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../map_generator.html" class="reference internal ">map_generator package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../path_finder.html" class="reference internal ">path_finder package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="index.html">Module code</a> &raquo;</li>
+    
+    <li>helper</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <h1>Source code for helper</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">osmnx</span> <span class="k">as</span> <span class="nn">ox</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="sd">&#39;&#39;&#39;This is a helper class which contains helper functions to make sure</span>
+<span class="sd">    that can be used for performing different tasks.</span>
+<span class="sd">    </span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="helper"><a class="viewcode-back" href="../helper.html#helper.helper">[docs]</a><span class="k">class</span> <span class="nc">helper</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="helper.validate_input"><a class="viewcode-back" href="../helper.html#helper.helper.validate_input">[docs]</a>    <span class="k">def</span> <span class="nf">validate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function validates the request body sent by client. A error message is passed to the client if request body</span>
+<span class="sd">        doesn&#39;t follows specified format</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            location (dict): Client request body. Expected format : {</span>
+<span class="sd">                        &quot;source&quot;:&quot;&lt;required_field_str&gt;, (&lt;address, city, state&gt;), (eg: 138 Brittany Manor Drive, Amherst, MA)&quot;,</span>
+<span class="sd">                        &quot;destination&quot;: &quot;&lt;required_field_str, (&lt;address, city, state&gt;), (1040 N Pleasant St, Amherst, MA)&gt;&quot;,</span>
+<span class="sd">                        &quot;percentage_length&quot;:&quot;&lt;required_field_int, (should be &gt;=100)&gt;&quot;,</span>
+<span class="sd">                        &quot;max_min&quot;:&quot;&lt;required_field_str&gt;, (min or max)&quot;,</span>
+<span class="sd">                    }</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if valid, False otherwise</span>
+<span class="sd">        </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;source&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;destination&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span> <span class="ow">or</span> \
+                <span class="p">(</span><span class="s2">&quot;percentage_length&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;max_min&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span>
+            <span class="n">destination</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">]</span>
+            <span class="n">percentage_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="s2">&quot;percentage_length&quot;</span><span class="p">]</span>
+            <span class="n">min_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="s2">&quot;max_min&quot;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">destination</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">min_max</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">percentage_length</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">percentage_length</span><span class="p">)</span><span class="o">!=</span><span class="nb">int</span> <span class="ow">or</span> <span class="n">percentage_length</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">!=</span><span class="nb">str</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span><span class="o">!=</span><span class="nb">str</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">min_max</span><span class="p">)</span><span class="o">!=</span><span class="nb">str</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">]):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong while trying to validate input with exception </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+   
+<div class="viewcode-block" id="helper.validate_location"><a class="viewcode-back" href="../helper.html#helper.helper.validate_location">[docs]</a>    <span class="k">def</span> <span class="nf">validate_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">graph</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">long</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function checks if the location is valid. </span>
+<span class="sd">            Validating location means finding a valid node in the generated map which is at a distance of less than 1 km from </span>
+<span class="sd">            the given location.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): Generated graph of the source and destination city</span>
+<span class="sd">            lat (float): location latitude</span>
+<span class="sd">            long (float): location longitude</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            osmnx.graph_node: nearest Valid node if the location is valid, None otherwise.</span>
+<span class="sd">            bool: True if location is valid, False otherwise</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">nearest_node</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">nearest_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">long</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span><span class="n">return_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">distance</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t find a node within 1000 ms of the given location!!!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">nearest_node</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Location is Valid!!!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nearest_node</span><span class="p">,</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="helper.route_length"><a class="viewcode-back" href="../helper.html#helper.helper.route_length">[docs]</a>    <span class="k">def</span> <span class="nf">route_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Calculates the length of a given</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): Generated graph of the source and destination city</span>
+<span class="sd">            path (list[int]): A connected path in form of array of nodes from source to destination</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The length of the given path</span>
+<span class="sd">        </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">path_length</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
+            
+            <span class="n">path_length</span> <span class="o">+=</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">path_length</span></div>
+
+<div class="viewcode-block" id="helper.validate_address"><a class="viewcode-back" href="../helper.html#helper.helper.validate_address">[docs]</a>    <span class="k">def</span> <span class="nf">validate_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Validates a given address to check if it follows the specified format &lt;address, city, state&gt;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            address (str): Given address string</span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the address is in correct format False otherwise</span>
+<span class="sd">        </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">address_list</span> <span class="o">=</span> <span class="n">address</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">address_list</span><span class="p">)</span> <span class="o">&lt;</span><span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+
+
+
+
+
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>
