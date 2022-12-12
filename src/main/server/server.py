@@ -10,10 +10,10 @@ logging.basicConfig(level = logging.INFO)
 app = Flask(__name__)
 CORS(app)
 
-"""
-    The high-level goal of this project EleNa(Elevation-based Navigation) to develop a software system that determines, given a start and an end location, a route that maximizes or minimizes elevation gain, 
+"""The high-level goal of this project EleNa(Elevation-based Navigation) to develop a software system that determines, given a start and an end location, a route that maximizes or minimizes elevation gain, 
     while limiting the total distance between the two locations to x% of the shortest path. It can be really useful for people who want to maximize elevation gain if they are looking for an intense yet time-constrained workout.
     Likewise, it can also help those who are ready to go some extra miles to avoid an elevated route
+
 """
 
 
@@ -23,7 +23,6 @@ def fetch_route():
     '''This is a POST API that takes the gives most optimal route data for a hicker or biker based on their elevation preference
     
     Request: 
-
         "data":{
             "source":"138 Brittany Manor Drive, Amherst, MA",
             "destination": "Amherst Commons, Amherst, MA",
@@ -34,7 +33,6 @@ def fetch_route():
         }
 
     Response:
-
         "response":{
             'Route' : <an array of lat long pair denoting actual route>,
             'Distance':<distance of the optimized path>,
@@ -42,6 +40,7 @@ def fetch_route():
             'source':<source co-ordinates (lat, long)>,
             'destination':<"destination co-ordinates (lat,long)>
         }
+
     '''
     try:
         req_data = request.json

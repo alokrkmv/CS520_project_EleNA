@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+      <title>helper module</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="map_generator package" href="map_generator.html" />
+  <link rel="prev" title="server" href="modules.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="modules.html#server">server</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">helper module</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#module-helper" class="reference internal">helper module</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="map_generator.html" class="reference internal ">map_generator package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="path_finder.html" class="reference internal ">path_finder package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="modules.html">server</a> &raquo;</li>
+    
+    <li>helper module</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="modules.html"
+       title="previous chapter">← server</a>
+  </li>
+  <li class="next">
+    <a href="map_generator.html"
+       title="next chapter">map_generator package →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="module-helper">
+<span id="helper-module"></span><h1>helper module<a class="headerlink" href="#module-helper" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="helper.helper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">helper.</span></span><span class="sig-name descname"><span class="pre">helper</span></span><a class="reference internal" href="_modules/helper.html#helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helper.helper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="helper.helper.route_length">
+<span class="sig-name descname"><span class="pre">route_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/helper.html#helper.route_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helper.helper.route_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the length of a given</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>graph (osmnx.graph): Generated graph of the source and destination city
+path (list[int]): A connected path in form of array of nodes from source to destination</p>
+</dd>
+<dt>Returns:</dt><dd><p>float: The length of the given path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="helper.helper.validate_address">
+<span class="sig-name descname"><span class="pre">validate_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/helper.html#helper.validate_address"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helper.helper.validate_address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a given address to check if it follows the specified format &lt;address, city, state&gt;</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>address (str): Given address string</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True if the address is in correct format False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="helper.helper.validate_input">
+<span class="sig-name descname"><span class="pre">validate_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/helper.html#helper.validate_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helper.helper.validate_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function validates the request body sent by client. A error message is passed to the client if request body
+doesn’t follows specified format</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>location (dict): Client request body. Expected format<span class="classifier">{</span></dt><dd><blockquote>
+<div><p>“source”:”&lt;required_field_str&gt;, (&lt;address, city, state&gt;), (eg: 138 Brittany Manor Drive, Amherst, MA)”,
+“destination”: “&lt;required_field_str, (&lt;address, city, state&gt;), (1040 N Pleasant St, Amherst, MA)&gt;”,
+“percentage_length”:”&lt;required_field_int, (should be &gt;=100)&gt;”,
+“max_min”:”&lt;required_field_str&gt;, (min or max)”,</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True if valid, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="helper.helper.validate_location">
+<span class="sig-name descname"><span class="pre">validate_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/helper.html#helper.validate_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helper.helper.validate_location" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function checks if the location is valid. </dt><dd><p>Validating location means finding a valid node in the generated map which is at a distance of less than 1 km from 
+the given location.</p>
+</dd>
+<dt>Args:</dt><dd><p>graph (osmnx.graph): Generated graph of the source and destination city
+lat (float): location latitude
+long (float): location longitude</p>
+</dd>
+<dt>Returns:</dt><dd><p>osmnx.graph_node: nearest Valid node if the location is valid, None otherwise.
+bool: True if location is valid, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="modules.html"
+       title="previous chapter">← server</a>
+  </li>
+  <li class="next">
+    <a href="map_generator.html"
+       title="next chapter">map_generator package →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

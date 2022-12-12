@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+      <title>map_generator package</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="path_finder package" href="path_finder.html" />
+  <link rel="prev" title="helper module" href="helper.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="modules.html#server">server</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="helper.html" class="reference internal ">helper module</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">map_generator package</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#submodules" class="reference internal">Submodules</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-map_generator.generate_map" class="reference internal">map_generator.generate_map module</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-map_generator" class="reference internal">Module contents</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="path_finder.html" class="reference internal ">path_finder package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="modules.html">server</a> &raquo;</li>
+    
+    <li>map_generator package</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="helper.html"
+       title="previous chapter">← helper module</a>
+  </li>
+  <li class="next">
+    <a href="path_finder.html"
+       title="next chapter">path_finder package →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="map-generator-package">
+<h1>map_generator package<a class="headerlink" href="#map-generator-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-map_generator.generate_map">
+<span id="map-generator-generate-map-module"></span><h2>map_generator.generate_map module<a class="headerlink" href="#module-map_generator.generate_map" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="map_generator.generate_map.GenerateMap">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">map_generator.generate_map.</span></span><span class="sig-name descname"><span class="pre">GenerateMap</span></span><a class="reference internal" href="_modules/map_generator/generate_map.html#GenerateMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#map_generator.generate_map.GenerateMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is responsible for generating the map of city in which source and destination lies. It also saves the generated map into the
+cache in case of cache miss and serves the map from cache in case of case hit</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="map_generator.generate_map.GenerateMap.add_node_elevations_open">
+<span class="sig-name descname"><span class="pre">add_node_elevations_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_locations_per_batch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pause_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/map_generator/generate_map.html#GenerateMap.add_node_elevations_open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#map_generator.generate_map.GenerateMap.add_node_elevations_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Osmnx provides method get_node_elevation_google which attaches elevation data to each node of the generated graph
+using Google’s elevation API. Although Google’s elevation API is not free, hence here we have modified this
+function to use open-elevation API which is an open source version of Google’s elevation API.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="map_generator.generate_map.GenerateMap.generateGraphPlot">
+<span class="sig-name descname"><span class="pre">generateGraphPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/map_generator/generate_map.html#GenerateMap.generateGraphPlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#map_generator.generate_map.GenerateMap.generateGraphPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function plots the map using osmnx default graph plotter and saves it as a jpg image</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The map to be plotted</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="map_generator.generate_map.GenerateMap.generateMap">
+<span class="sig-name descname"><span class="pre">generateMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">city</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/map_generator/generate_map.html#GenerateMap.generateMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#map_generator.generate_map.GenerateMap.generateMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method generates map of the city and state with elevation info attached to each node
+For getting the elevation info we are using open elevation API which is free version of Google’s elevation API
+For generating the map we wil be using osmnx map generator.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>city(str): City
+state(str): State</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="map_generator.generate_map.GenerateMap.getLocationInfo">
+<span class="sig-name descname"><span class="pre">getLocationInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/map_generator/generate_map.html#GenerateMap.getLocationInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#map_generator.generate_map.GenerateMap.getLocationInfo" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This method fetches city, state and lat-long info for a particular address. City and state is fetched by parsing the address data</dt><dd><p>while latitude and longitude is fetched using geopy library.</p>
+</dd>
+<dt>Args:</dt><dd><p>location (str): Address for which location data needs to be fetched</p>
+</dd>
+<dt>Return:</dt><dd><dl class="simple">
+<dt>dict: A dictionary consisting {“lat”:&lt;latitude &lt;str&gt;&gt;,</dt><dd><p>“long”:&lt;longitude &lt;str&gt;&gt;,
+“city”:&lt;str&gt;,
+“state”:&lt;str&gt;}</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-map_generator">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-map_generator" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="helper.html"
+       title="previous chapter">← helper module</a>
+  </li>
+  <li class="next">
+    <a href="path_finder.html"
+       title="next chapter">path_finder package →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

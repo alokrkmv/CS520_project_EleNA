@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>path_finder.algorithm_selector</title>
+    
+          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../_static/theme-vendors.js"></script> -->
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../modules.html#server">server</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../helper.html" class="reference internal ">helper module</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../map_generator.html" class="reference internal ">map_generator package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../path_finder.html" class="reference internal ">path_finder package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>path_finder.algorithm_selector</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <h1>Source code for path_finder.algorithm_selector</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">path_finder.djikistra_path_finder</span> <span class="kn">import</span> <span class="n">DjikstraPathFinder</span>
+<span class="kn">from</span> <span class="nn">path_finder.a_star_path_finder</span> <span class="kn">import</span> <span class="n">AStarPathFinder</span>
+
+
+<div class="viewcode-block" id="AlgorithmSelector"><a class="viewcode-back" href="../../path_finder.html#path_finder.algorithm_selector.AlgorithmSelector">[docs]</a><span class="k">class</span> <span class="nc">AlgorithmSelector</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;This class implements a function responsible for picking the between a_star and Djikistra algorithm for generating final result</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span> <span class="o">=</span> <span class="n">DjikstraPathFinder</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a_star</span> <span class="o">=</span> <span class="n">AStarPathFinder</span><span class="p">()</span>
+<div class="viewcode-block" id="AlgorithmSelector.pick_algorithm"><a class="viewcode-back" href="../../path_finder.html#path_finder.algorithm_selector.AlgorithmSelector.pick_algorithm">[docs]</a>    <span class="k">def</span> <span class="nf">pick_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">graph</span><span class="p">,</span> <span class="n">nearest_node_source</span><span class="p">,</span> <span class="n">nearest_node_destination</span><span class="p">,</span> <span class="n">percentage_length</span><span class="p">,</span> <span class="n">max_min</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function takes a graph(map of the city), start_node, end_node, percentage path length, </span>
+<span class="sd">           max or min elevation gain and fetches most optimal path from both Djikistra and A_star path finding algorithm. </span>
+<span class="sd">           Then fetches the final result taking into client&#39;s choice of elevation gain</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            nearest_node_source (osmnx.graph.node): Source node nearest to the given source</span>
+<span class="sd">            nearest_node_destination (osmnx.graph.node): Destination node nearest to the given destination</span>
+<span class="sd">            percentage_length (int): Maximum percentage length above the shortest path length user is willing to go</span>
+<span class="sd">            min_max (str): User&#39;s choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain </span>
+<span class="sd">            min means user wants to minimize elevation gain</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user&#39;s input</span>
+<span class="sd">            float: length of the path</span>
+<span class="sd">            float: elevation gain across the path</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Get details from Djikstra</span>
+        <span class="n">route_1</span><span class="p">,</span> <span class="n">dist_1</span><span class="p">,</span> <span class="n">elevation_gain_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">nearest_node_source</span><span class="p">,</span> <span class="n">nearest_node_destination</span><span class="p">,</span> <span class="n">percentage_length</span><span class="p">,</span> <span class="n">max_min</span> <span class="p">)</span>
+        <span class="c1"># Get details from Astar</span>
+        <span class="n">route_2</span><span class="p">,</span> <span class="n">dist_2</span><span class="p">,</span> <span class="n">elevation_gain_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_star</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">nearest_node_source</span><span class="p">,</span> <span class="n">nearest_node_destination</span><span class="p">,</span> <span class="n">percentage_length</span><span class="p">,</span> <span class="n">max_min</span> <span class="p">)</span>
+
+        <span class="n">is_max</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">max_min</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">is_max</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">elevation_gain_1</span><span class="o">&gt;=</span><span class="n">elevation_gain_2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">route_1</span><span class="p">,</span> <span class="n">dist_1</span><span class="p">,</span> <span class="n">elevation_gain_1</span> 
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">route_2</span><span class="p">,</span> <span class="n">dist_2</span><span class="p">,</span> <span class="n">elevation_gain_2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">elevation_gain_1</span><span class="o">&lt;=</span><span class="n">elevation_gain_2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">route_1</span><span class="p">,</span> <span class="n">dist_1</span><span class="p">,</span> <span class="n">elevation_gain_1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">route_2</span><span class="p">,</span> <span class="n">dist_2</span><span class="p">,</span> <span class="n">elevation_gain_2</span></div></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>
