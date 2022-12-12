@@ -5,7 +5,7 @@ from path_finder.djikistra_path_finder import DjikstraPathFinder
 
 '''
 
-This class implements a modified version of Djikistra shortest path
+This class implements a modified version of Astar shortest path
 algorithm to find a suitable path satisfiying percetange path length and 
 elevation gain requirement of the client
 

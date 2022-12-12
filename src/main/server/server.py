@@ -95,9 +95,6 @@ def fetch_route():
         logging.error(f"Something went wrong while trying to fetch map for city {source_info['city']} and {source_info['state']}")
         return {"message":f"Something went wrong while trying to fetch map for city {source_info['city']} and {source_info['state']}"}
 
-    '''
-    TODO: Call Path Finder and get the optimal route satisfying all the conditions
-    '''
 
     nearest_node_source, is_source_valid = helper_obj.validate_location(graph, source_info["lat"],source_info["long"])
     if not is_source_valid:
@@ -122,7 +119,10 @@ def fetch_route():
         res = {
             "route":route,
             "distance": f"{dist:.3f} mts",
-            "elevation_gain": f"{elevation_gain:.3f} mts"
+            "elevation_gain": f"{elevation_gain:.3f} mts",
+            "source":[source_info["lat"],source_info["long"]],
+            "destination":[destination_info["lat"],destination_info["long"]]
+
         }
         print(res)
         return res
