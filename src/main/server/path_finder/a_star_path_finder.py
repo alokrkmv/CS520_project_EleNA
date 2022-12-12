@@ -10,7 +10,7 @@ algorithm to find a suitable path satisfiying percetange path length and
 elevation gain requirement of the client
 
 '''
-class AStarPathFinder():
+class AStarPathFinder:
     def __init__(self):
         self.djikstra = DjikstraPathFinder()
       
