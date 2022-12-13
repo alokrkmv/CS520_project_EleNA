@@ -1,8 +1,9 @@
 import heapq
 import logging
 from helper import helper
+from path_finder.path_finder import PathFinderInterface
 
-class DjikstraPathFinder:
+class DjikstraPathFinder(PathFinderInterface):
     '''This class implements a modified version of Djikistra shortest path
         algorithm to find a suitable path satisfiying percetange path length and 
         elevation gain requirement of the client
