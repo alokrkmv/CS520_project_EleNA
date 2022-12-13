@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+      <title>server</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="helper module" href="helper.html" />
+  <link rel="prev" title="Welcome to EleNa Documentation’s documentation!" href="index.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="#server">server</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="helper.html" class="reference internal ">helper module</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="map_generator.html" class="reference internal ">map_generator package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="path_finder.html" class="reference internal ">path_finder package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>server</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← Welcome to EleNa Documentation’s documentation!</a>
+  </li>
+  <li class="next">
+    <a href="helper.html"
+       title="next chapter">helper module →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="server">
+<h1>server<a class="headerlink" href="#server" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="helper.html">helper module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helper.html#helper.helper"><code class="docutils literal notranslate"><span class="pre">helper</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="helper.html#helper.helper.route_length"><code class="docutils literal notranslate"><span class="pre">helper.route_length()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="helper.html#helper.helper.validate_address"><code class="docutils literal notranslate"><span class="pre">helper.validate_address()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="helper.html#helper.helper.validate_input"><code class="docutils literal notranslate"><span class="pre">helper.validate_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="helper.html#helper.helper.validate_location"><code class="docutils literal notranslate"><span class="pre">helper.validate_location()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="map_generator.html">map_generator package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="map_generator.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map_generator.html#module-map_generator.generate_map">map_generator.generate_map module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="map_generator.html#map_generator.generate_map.GenerateMap"><code class="docutils literal notranslate"><span class="pre">GenerateMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="map_generator.html#map_generator.generate_map.GenerateMap.add_node_elevations_open"><code class="docutils literal notranslate"><span class="pre">GenerateMap.add_node_elevations_open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="map_generator.html#map_generator.generate_map.GenerateMap.generateGraphPlot"><code class="docutils literal notranslate"><span class="pre">GenerateMap.generateGraphPlot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="map_generator.html#map_generator.generate_map.GenerateMap.generateMap"><code class="docutils literal notranslate"><span class="pre">GenerateMap.generateMap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="map_generator.html#map_generator.generate_map.GenerateMap.getLocationInfo"><code class="docutils literal notranslate"><span class="pre">GenerateMap.getLocationInfo()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="map_generator.html#module-map_generator">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="path_finder.html">path_finder package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="path_finder.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="path_finder.html#module-path_finder.a_star_path_finder">path_finder.a_star_path_finder module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="path_finder.html#path_finder.a_star_path_finder.AStarPathFinder"><code class="docutils literal notranslate"><span class="pre">AStarPathFinder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.find_next_node"><code class="docutils literal notranslate"><span class="pre">AStarPathFinder.find_next_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.get_coordinates"><code class="docutils literal notranslate"><span class="pre">AStarPathFinder.get_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.get_path"><code class="docutils literal notranslate"><span class="pre">AStarPathFinder.get_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.heuristic_function"><code class="docutils literal notranslate"><span class="pre">AStarPathFinder.heuristic_function()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="path_finder.html#module-path_finder.algorithm_selector">path_finder.algorithm_selector module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="path_finder.html#path_finder.algorithm_selector.AlgorithmSelector"><code class="docutils literal notranslate"><span class="pre">AlgorithmSelector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.algorithm_selector.AlgorithmSelector.pick_algorithm"><code class="docutils literal notranslate"><span class="pre">AlgorithmSelector.pick_algorithm()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="path_finder.html#module-path_finder.djikistra_path_finder">path_finder.djikistra_path_finder module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder"><code class="docutils literal notranslate"><span class="pre">DjikstraPathFinder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.generate_path_array"><code class="docutils literal notranslate"><span class="pre">DjikstraPathFinder.generate_path_array()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_coordinates"><code class="docutils literal notranslate"><span class="pre">DjikstraPathFinder.get_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_elevation_gain"><code class="docutils literal notranslate"><span class="pre">DjikstraPathFinder.get_elevation_gain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_net_elevations"><code class="docutils literal notranslate"><span class="pre">DjikstraPathFinder.get_net_elevations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_path"><code class="docutils literal notranslate"><span class="pre">DjikstraPathFinder.get_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_path_length"><code class="docutils literal notranslate"><span class="pre">DjikstraPathFinder.get_path_length()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_shortest_path"><code class="docutils literal notranslate"><span class="pre">DjikstraPathFinder.get_shortest_path()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="path_finder.html#module-path_finder">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">server module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.fetch_route"><code class="docutils literal notranslate"><span class="pre">fetch_route()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← Welcome to EleNa Documentation’s documentation!</a>
+  </li>
+  <li class="next">
+    <a href="helper.html"
+       title="next chapter">helper module →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

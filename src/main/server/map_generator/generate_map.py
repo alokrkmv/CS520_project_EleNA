@@ -15,7 +15,12 @@ from geopy.geocoders import Nominatim
 from osmnx import downloader
 from osmnx import utils
 logging.basicConfig(level = logging.INFO)
-class GenerateMap():
+class GenerateMap:
+
+    '''This class is responsible for generating the map of city in which source and destination lies. It also saves the generated map into the
+        cache in case of cache miss and serves the map from cache in case of case hit
+    
+    '''
     
     def __init__(self):
         self.geolocator = Nominatim(user_agent = "project_elena")
@@ -29,17 +34,28 @@ class GenerateMap():
         Using the osmnx graph plotter to generate the plot of the graph
     '''
     def generateGraphPlot(self, graph):
+        '''This function plots the map using osmnx default graph plotter and saves it as a jpg image
+        
+        Args:
+            graph (osmnx.graph): The map to be plotted
+
+        '''
         ox.log('Generating graph based on elevation !')
-        # graph_simplified = ox.simplify_graph(graph)
-        # G_projected = ox.project_graph(graph_simplified)
         ox.plot_graph(G=graph, figsize=(40, 40), bgcolor = "#FFFFFF",node_color='b', node_size=5, edge_color='#0000FF', edge_linewidth=1,save=True, filepath=self.image_path,show=False)
 
-    '''
-        This method would find town, state and lat-long info for a particular location
-        Returns a dictionary as params with lat, long, town and state as key
-        We will be using geopy for finding lat, long of a particular location
-    '''
+   
     def getLocationInfo(self, location : str):
+        '''This method fetches city, state and lat-long info for a particular address. City and state is fetched by parsing the address data
+            while latitude and longitude is fetched using geopy library.
+        Args:
+            location (str): Address for which location data needs to be fetched
+
+        Return:
+            dict: A dictionary consisting {"lat":<latitude <str>>,
+                                           "long":<longitude <str>>,
+                                           "city":<str>,
+                                           "state":<str>}
+        '''
         try:
             location_info = location.split(",")
             params = {}
@@ -53,12 +69,17 @@ class GenerateMap():
             return params
             
     
-    '''
-        This method generates map of the city and state with elevation info attached to each node
-        For getting the elevation info we will be using elevation API of Google
-        For generating the map we wil be using osmnx map generator
-    '''
+   
     def generateMap(self, city, state):
+        '''This method generates map of the city and state with elevation info attached to each node
+            For getting the elevation info we are using open elevation API which is free version of Google's elevation API
+            For generating the map we wil be using osmnx map generator.
+
+            Args:
+                city(str): City
+                state(str): State
+
+        '''
         self.city = city
         self.state = state
         self.file_path = f"generated_maps/{self.city}_{self.state}.pkl"
@@ -91,11 +112,11 @@ class GenerateMap():
             graph = ox.graph_from_place(params, network_type='bike')
             # Adding elevation data
             graph = self.add_node_elevations_open(graph)
-            '''
-            Add grade attribute to each graph edge.
-            Vectorized function to calculate the directed grade (ie, rise over run) for each edge in the graph and add it to the edge as an attribute. 
-            Nodes must already have elevation attributes to use this function.
-            '''
+            
+            #Add grade attribute to each graph edge.
+            #Vectorized function to calculate the directed grade (ie, rise over run) for each edge in the graph and add it to the edge as an attribute. 
+            #Nodes must already have elevation attributes to use this function.
+            
             graph = ox.add_edge_grades(graph)
             try:
                 logging.info(f"Adding the generated graph for city {city} state {state} in cache")
@@ -115,13 +136,14 @@ class GenerateMap():
 
             return graph, False
 
-    '''
-    Osmnx provides method get_node_elevation_google which attaches elevation data to each node of the generated graph
-    using Google's elevation API. Although Google's elevation API is not free, hence here we have modified this
-    function to use open-elevation API which is an open source version of Google's elevation API.
-    '''
+   
     def add_node_elevations_open(self, G, max_locations_per_batch=180,
                              pause_duration=0.02, precision=3):  # pragma: no cover
+
+        '''Osmnx provides method get_node_elevation_google which attaches elevation data to each node of the generated graph
+            using Google's elevation API. Although Google's elevation API is not free, hence here we have modified this
+            function to use open-elevation API which is an open source version of Google's elevation API.
+        '''
 
         """
         Add `elevation` (meters) attribute to each node using a web service.

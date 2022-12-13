@@ -10,28 +10,38 @@ logging.basicConfig(level = logging.INFO)
 app = Flask(__name__)
 CORS(app)
 
-'''
-Sample Request body : 
+"""The high-level goal of this project EleNa(Elevation-based Navigation) to develop a software system that determines, given a start and an end location, a route that maximizes or minimizes elevation gain, 
+    while limiting the total distance between the two locations to x% of the shortest path. It can be really useful for people who want to maximize elevation gain if they are looking for an intense yet time-constrained workout.
+    Likewise, it can also help those who are ready to go some extra miles to avoid an elevated route
 
-"data":{
-	"source":"138 Brittany Manor Drive, Amherst, MA",
-	"destination": "Amherst Commons, Amherst, MA",
-	"percentage_length":"100",
-	"max_min":"min",
-    "algorithm":"dijkstra"
-	
-}
+"""
 
-Sample response:
 
-"response":{
-    'Route' : route,
-    'Distance':dist,
-    'Elevation Gain':elevation
-}
-'''
+
 @app.route("/fetch_route",methods=["POST"])
 def fetch_route():
+    '''This is a POST API that takes the gives most optimal route data for a hicker or biker based on their elevation preference
+    
+    Request: 
+        "data":{
+            "source":"138 Brittany Manor Drive, Amherst, MA",
+            "destination": "Amherst Commons, Amherst, MA",
+            "percentage_length":"100",
+            "max_min":"min",
+            "algorithm":"dijkstra"
+            
+        }
+
+    Response:
+        "response":{
+            'Route' : <an array of lat long pair denoting actual route>,
+            'Distance':<distance of the optimized path>,
+            'Elevation Gain':<Net elevation gain achieved>,
+            'source':<source co-ordinates (lat, long)>,
+            'destination':<"destination co-ordinates (lat,long)>
+        }
+
+    '''
     try:
         req_data = request.json
         data_dict = None
@@ -41,9 +51,6 @@ def fetch_route():
             data_dict = ast.literal_eval(req_data)
 
         
-
-        # data_dict = data.get("data")
-        # data_dict = data
         data_dict["percentage_length"] = int(data_dict["percentage_length"])
         if data_dict == None:
             return {"message":"Empty request body"}
@@ -58,7 +65,6 @@ def fetch_route():
                         "destination": "<required_field_str, (<address, city, state>), (1040 N Pleasant St, Amherst, MA)>",
                         "percentage_length":"<required_field_int, (should be >=100)>",
                         "max_min":"<required_field_str>, (min or max)",
-                        "algorithm":"<optional_field_str>, (djikistra or a*)"
                     }
                 }
                 return response_dict
@@ -95,9 +101,6 @@ def fetch_route():
         logging.error(f"Something went wrong while trying to fetch map for city {source_info['city']} and {source_info['state']}")
         return {"message":f"Something went wrong while trying to fetch map for city {source_info['city']} and {source_info['state']}"}
 
-    '''
-    TODO: Call Path Finder and get the optimal route satisfying all the conditions
-    '''
 
     nearest_node_source, is_source_valid = helper_obj.validate_location(graph, source_info["lat"],source_info["long"])
     if not is_source_valid:
@@ -112,28 +115,22 @@ def fetch_route():
     route = None
     dist = None
     elevation_gain = None
-    # Default algorithm for path finding is djikistra
-    if algorithm == None or "dji" in algorithm:
-        algorithm_selector = AlgorithmSelector()
-        route, dist, elevation_gain = algorithm_selector.pick_algorithm(graph, nearest_node_source, nearest_node_destination, percentage_length, max_min )
-        if route == None or dist == None or elevation_gain == None:
-            logging.error("Something went wrong while trying to fetch required metrices for the given input")
-            return {"message":"Something went wrong while trying to fetch required metrices for the given input!!! please try with a different input"}
-        res = {
-            "route":route,
-            "distance": f"{dist:.3f} mts",
-            "elevation_gain": f"{elevation_gain:.3f} mts"
-        }
-        print(res)
-        return res
-    else:
-        pass
-            
-    
-    
+    # We are using an intelligent algorithm selector to find best algorithm for a specific optimization request
+    algorithm_selector = AlgorithmSelector()
+    route, dist, elevation_gain = algorithm_selector.pick_algorithm(graph, nearest_node_source, nearest_node_destination, percentage_length, max_min )
+    if route == None or dist == None or elevation_gain == None:
+        logging.error("Something went wrong while trying to fetch required metrices for the given input")
+        return {"message":"Something went wrong while trying to fetch required metrices for the given input!!! please try with a different input"}
+    res = {
+        "route":route,
+        "distance": f"{dist:.3f} mts",
+        "elevation_gain": f"{elevation_gain:.3f} mts",
+        "source":[source_info["lat"],source_info["long"]],
+        "destination":[destination_info["lat"],destination_info["long"]]
 
-    return {"graph":True}
-    
-    # return data.get("data")
+    }
+    return res
+ 
+            
 if __name__ == '__main__':
     app.run(host="localhost", port=8000, debug=True)

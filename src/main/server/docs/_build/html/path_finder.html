@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+      <title>path_finder package</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="server module" href="server.html" />
+  <link rel="prev" title="map_generator package" href="map_generator.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="modules.html#server">server</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="helper.html" class="reference internal ">helper module</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="map_generator.html" class="reference internal ">map_generator package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">path_finder package</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#submodules" class="reference internal">Submodules</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-path_finder.a_star_path_finder" class="reference internal">path_finder.a_star_path_finder module</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-path_finder.algorithm_selector" class="reference internal">path_finder.algorithm_selector module</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-path_finder.djikistra_path_finder" class="reference internal">path_finder.djikistra_path_finder module</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-path_finder" class="reference internal">Module contents</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="modules.html">server</a> &raquo;</li>
+    
+    <li>path_finder package</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="map_generator.html"
+       title="previous chapter">← map_generator package</a>
+  </li>
+  <li class="next">
+    <a href="server.html"
+       title="next chapter">server module →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="path-finder-package">
+<h1>path_finder package<a class="headerlink" href="#path-finder-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-path_finder.a_star_path_finder">
+<span id="path-finder-a-star-path-finder-module"></span><h2>path_finder.a_star_path_finder module<a class="headerlink" href="#module-path_finder.a_star_path_finder" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">path_finder.a_star_path_finder.</span></span><span class="sig-name descname"><span class="pre">AStarPathFinder</span></span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class implements a modified version of Astar shortest path
+algorithm to find a suitable path satisfiying percetange path length and 
+elevation gain requirement of the client</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder.find_next_node">
+<span class="sig-name descname"><span class="pre">find_next_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_costs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder.find_next_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder.find_next_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function finds the next node with mimimum cost from the current node</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>nodes (list[node]): An array of nodes
+node_cost (dict): Cost metrix</p>
+</dd>
+<dt>Returns:</dt><dd><p>osmnx.graph.node: Returns the next node with minimum cost</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder.get_coordinates">
+<span class="sig-name descname"><span class="pre">get_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder.get_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder.get_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function finds x and y coordinates for each node in the path</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+path list[node]: A list of nodes from source to destination representing the path from source to destination</p>
+</dd>
+<dt>Returns:</dt><dd><p>coord: Returns an array of tuples where each tuple corresponds to x and y co-ordinate of the corrsponding path node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder.get_path">
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_max_gain</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder.get_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function returns most optimal path between a given source and destination node for a given input paramater</dt><dd><p>We are using a modified version of A* to find the most optimal path for given source and destination combination 
+considering user’s preference for elevation gain and maximum path length.
+Distance from one node to another is the edge weight</p>
+</dd>
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+start (osmnx.graph.node): Source node
+end (osmnx.graph.node): Destination node
+percentage_length (int): Maximum percentage length above the shortest path length user is willing to go
+min_max_gain (str): User’s choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain
+min means user wants to minimize elevation gain</p>
+</dd>
+<dt>Returns:</dt><dd><p>list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user’s input
+float: length of the path
+float: elevation gain across the path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.a_star_path_finder.AStarPathFinder.heuristic_function">
+<span class="sig-name descname"><span class="pre">heuristic_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/a_star_path_finder.html#AStarPathFinder.heuristic_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.a_star_path_finder.AStarPathFinder.heuristic_function" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>As A* is a heuristic based path finder algorithm we need to have a heuristic function. This is a simple heuristic</dt><dd><p>function which finds shortest possible distance (Eculedian distance) between source and destination</p>
+</dd>
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+start (osmnx.graph.node): First Node
+end (osmnx.graph.node): Second Node</p>
+</dd>
+<dt>Returns:</dt><dd><p>float: Eculidian distance between two nodes</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-path_finder.algorithm_selector">
+<span id="path-finder-algorithm-selector-module"></span><h2>path_finder.algorithm_selector module<a class="headerlink" href="#module-path_finder.algorithm_selector" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="path_finder.algorithm_selector.AlgorithmSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">path_finder.algorithm_selector.</span></span><span class="sig-name descname"><span class="pre">AlgorithmSelector</span></span><a class="reference internal" href="_modules/path_finder/algorithm_selector.html#AlgorithmSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.algorithm_selector.AlgorithmSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class implements a function responsible for picking the between a_star and Djikistra algorithm for generating final result</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.algorithm_selector.AlgorithmSelector.pick_algorithm">
+<span class="sig-name descname"><span class="pre">pick_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nearest_node_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nearest_node_destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_min</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/algorithm_selector.html#AlgorithmSelector.pick_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.algorithm_selector.AlgorithmSelector.pick_algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function takes a graph(map of the city), start_node, end_node, percentage path length, </dt><dd><p>max or min elevation gain and fetches most optimal path from both Djikistra and A_star path finding algorithm. 
+Then fetches the final result taking into client’s choice of elevation gain</p>
+</dd>
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+nearest_node_source (osmnx.graph.node): Source node nearest to the given source
+nearest_node_destination (osmnx.graph.node): Destination node nearest to the given destination
+percentage_length (int): Maximum percentage length above the shortest path length user is willing to go
+min_max (str): User’s choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain 
+min means user wants to minimize elevation gain</p>
+</dd>
+<dt>Returns:</dt><dd><p>list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user’s input
+float: length of the path
+float: elevation gain across the path</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-path_finder.djikistra_path_finder">
+<span id="path-finder-djikistra-path-finder-module"></span><h2>path_finder.djikistra_path_finder module<a class="headerlink" href="#module-path_finder.djikistra_path_finder" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="path_finder.djikistra_path_finder.DjikstraPathFinder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">path_finder.djikistra_path_finder.</span></span><span class="sig-name descname"><span class="pre">DjikstraPathFinder</span></span><a class="reference internal" href="_modules/path_finder/djikistra_path_finder.html#DjikstraPathFinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.djikistra_path_finder.DjikstraPathFinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class implements a modified version of Djikistra shortest path
+algorithm to find a suitable path satisfiying percetange path length and 
+elevation gain requirement of the client</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.djikistra_path_finder.DjikstraPathFinder.generate_path_array">
+<span class="sig-name descname"><span class="pre">generate_path_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reverse_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/djikistra_path_finder.html#DjikstraPathFinder.generate_path_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.djikistra_path_finder.DjikstraPathFinder.generate_path_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generated path from a key-value pair parent child dict for a given source and destination node</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>reverse_path(dict[node]:node): A key value pair dict with key as child node and value as parent node
+start_node(osmnx.graph.node): Source Node
+end_node(osmnx.graph.node): Destination Node</p>
+</dd>
+<dt>Returns:</dt><dd><p>list[(float,float)]: A list of tuple reprsenting co-ordinates of each node of the generated path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.djikistra_path_finder.DjikstraPathFinder.get_coordinates">
+<span class="sig-name descname"><span class="pre">get_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/djikistra_path_finder.html#DjikstraPathFinder.get_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.djikistra_path_finder.DjikstraPathFinder.get_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functions fetches x and y co-ordinates for each node of the path</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+path list[node]: A list of nodes from source to destination representing the path from source to destination</p>
+</dd>
+<dt>Returns:</dt><dd><p>list[(float,float)]: A list of tuple reprsenting co-ordinates of each node of the path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.djikistra_path_finder.DjikstraPathFinder.get_elevation_gain">
+<span class="sig-name descname"><span class="pre">get_elevation_gain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/djikistra_path_finder.html#DjikstraPathFinder.get_elevation_gain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.djikistra_path_finder.DjikstraPathFinder.get_elevation_gain" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates elevation gain between two nodes</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+start_node (osmnx.graph.node): First Node
+end_node (osmnx.graph.node): Second Node</p>
+</dd>
+<dt>Returns:</dt><dd><p>float: The elevation gain between the two given nodes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.djikistra_path_finder.DjikstraPathFinder.get_net_elevations">
+<span class="sig-name descname"><span class="pre">get_net_elevations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/djikistra_path_finder.html#DjikstraPathFinder.get_net_elevations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.djikistra_path_finder.DjikstraPathFinder.get_net_elevations" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates net elevation gain from source to destination while traversing a given path</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+path list[node]: A list of nodes from source to destination representing the path from source to destination</p>
+</dd>
+<dt>Returns:</dt><dd><p>float: The net elevation gain that can be achieved while traversing the given path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.djikistra_path_finder.DjikstraPathFinder.get_path">
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_max_gain</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/djikistra_path_finder.html#DjikstraPathFinder.get_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.djikistra_path_finder.DjikstraPathFinder.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function takes a graph(map of the city), start_node, end_node, percentage path length, </dt><dd><p>max or min elevation gain and returns path(an array of nodes from source to destination)
+elevation gain, path length</p>
+</dd>
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+start_node (osmnx.graph.node): Source node
+end_node (osmnx.graph.node): Destination node
+percentage_length (int): Maximum percentage length above the shortest path length user is willing to go
+min_max_gain (str): User’s choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain
+min means user wants to minimize elevation gain</p>
+</dd>
+<dt>Returns:</dt><dd><p>list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user’s input
+float: length of the path
+float: elevation gain across the path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.djikistra_path_finder.DjikstraPathFinder.get_path_length">
+<span class="sig-name descname"><span class="pre">get_path_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/djikistra_path_finder.html#DjikstraPathFinder.get_path_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.djikistra_path_finder.DjikstraPathFinder.get_path_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the path length of a given path</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+path list[node]: A list of nodes from source to destination representing the path from source to destination</p>
+</dd>
+<dt>Returns:</dt><dd><p>float: Length of the entire path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="path_finder.djikistra_path_finder.DjikstraPathFinder.get_shortest_path">
+<span class="sig-name descname"><span class="pre">get_shortest_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/path_finder/djikistra_path_finder.html#DjikstraPathFinder.get_shortest_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#path_finder.djikistra_path_finder.DjikstraPathFinder.get_shortest_path" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function returns shortest path between a given source and destination node</dt><dd><p>We are using Djikistra algorithm to find shortest path between two nodes.
+Distance from one node to another is the edge weight</p>
+</dd>
+<dt>Args:</dt><dd><p>graph (osmnx.graph): The graph of the city in which source and destination lies
+start_node (osmnx.graph.node): Source node
+end_node (osmnx.graph.node): Destination node</p>
+</dd>
+<dt>Returns:</dt><dd><p>list[nodes]: A list of nodes from source to destination represting the shortest possible path from source to destination</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-path_finder">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-path_finder" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="map_generator.html"
+       title="previous chapter">← map_generator package</a>
+  </li>
+  <li class="next">
+    <a href="server.html"
+       title="next chapter">server module →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

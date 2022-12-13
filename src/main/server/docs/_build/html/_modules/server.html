@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>server</title>
+    
+          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../_static/theme-vendors.js"></script> -->
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../modules.html#server">server</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../helper.html" class="reference internal ">helper module</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../map_generator.html" class="reference internal ">map_generator package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../path_finder.html" class="reference internal ">path_finder package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="index.html">Module code</a> &raquo;</li>
+    
+    <li>server</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <h1>Source code for server</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">helper</span> <span class="kn">import</span> <span class="n">helper</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">map_generator.generate_map</span> <span class="kn">import</span> <span class="n">GenerateMap</span>
+<span class="kn">from</span> <span class="nn">path_finder.algorithm_selector</span> <span class="kn">import</span> <span class="n">AlgorithmSelector</span>
+<span class="kn">from</span> <span class="nn">flask_cors</span> <span class="kn">import</span> <span class="n">CORS</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;The high-level goal of this project EleNa(Elevation-based Navigation) to develop a software system that determines, given a start and an end location, a route that maximizes or minimizes elevation gain, </span>
+<span class="sd">    while limiting the total distance between the two locations to x% of the shortest path. It can be really useful for people who want to maximize elevation gain if they are looking for an intense yet time-constrained workout.</span>
+<span class="sd">    Likewise, it can also help those who are ready to go some extra miles to avoid an elevated route</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+
+<div class="viewcode-block" id="fetch_route"><a class="viewcode-back" href="../server.html#server.fetch_route">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/fetch_route&quot;</span><span class="p">,</span><span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">fetch_route</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;This is a POST API that takes the gives most optimal route data for a hicker or biker based on their elevation preference</span>
+<span class="sd">    </span>
+<span class="sd">    Request: </span>
+<span class="sd">        &quot;data&quot;:{</span>
+<span class="sd">            &quot;source&quot;:&quot;138 Brittany Manor Drive, Amherst, MA&quot;,</span>
+<span class="sd">            &quot;destination&quot;: &quot;Amherst Commons, Amherst, MA&quot;,</span>
+<span class="sd">            &quot;percentage_length&quot;:&quot;100&quot;,</span>
+<span class="sd">            &quot;max_min&quot;:&quot;min&quot;,</span>
+<span class="sd">            &quot;algorithm&quot;:&quot;dijkstra&quot;</span>
+<span class="sd">            </span>
+<span class="sd">        }</span>
+
+<span class="sd">    Response:</span>
+<span class="sd">        &quot;response&quot;:{</span>
+<span class="sd">            &#39;Route&#39; : &lt;an array of lat long pair denoting actual route&gt;,</span>
+<span class="sd">            &#39;Distance&#39;:&lt;distance of the optimized path&gt;,</span>
+<span class="sd">            &#39;Elevation Gain&#39;:&lt;Net elevation gain achieved&gt;,</span>
+<span class="sd">            &#39;source&#39;:&lt;source co-ordinates (lat, long)&gt;,</span>
+<span class="sd">            &#39;destination&#39;:&lt;&quot;destination co-ordinates (lat,long)&gt;</span>
+<span class="sd">        }</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">req_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
+        <span class="n">data_dict</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">req_data</span><span class="p">)</span><span class="o">==</span><span class="nb">dict</span><span class="p">:</span>
+            <span class="n">data_dict</span> <span class="o">=</span> <span class="n">req_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">req_data</span><span class="p">)</span>
+
+        
+        <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;percentage_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;percentage_length&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">data_dict</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Empty request body&quot;</span><span class="p">}</span>
+        <span class="n">helper_obj</span> <span class="o">=</span> <span class="n">helper</span><span class="p">()</span>
+        <span class="c1"># Validating the inpute for required fields</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">helper_obj</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="n">data_dict</span><span class="p">):</span>
+                <span class="n">response_dict</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Invalid input!!! Make sure that the request body is valid&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;valid_request_body_template&quot;</span><span class="p">:{</span>
+                        <span class="s2">&quot;source&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;required_field_str&gt;, (&lt;address, city, state&gt;), (eg: 138 Brittany Manor Drive, Amherst, MA)&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;destination&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;required_field_str, (&lt;address, city, state&gt;), (1040 N Pleasant St, Amherst, MA)&gt;&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;percentage_length&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;required_field_int, (should be &gt;=100)&gt;&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;max_min&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;required_field_str&gt;, (min or max)&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">response_dict</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong in validationg input with exception </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Something went wrong in validating input with exception </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span>
+        <span class="n">destination</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">]</span>
+        <span class="n">max_min</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;max_min&quot;</span><span class="p">]</span>
+        <span class="n">percentage_length</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;percentage_length&quot;</span><span class="p">]</span>
+        <span class="n">algorithm</span> <span class="o">=</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;algorithm&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">map_generator_obj</span> <span class="o">=</span> <span class="n">GenerateMap</span><span class="p">()</span>
+        <span class="n">source_info</span> <span class="o">=</span> <span class="n">map_generator_obj</span><span class="o">.</span><span class="n">getLocationInfo</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">source_info</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s2">&quot;lat&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source_info</span> <span class="ow">or</span> <span class="s2">&quot;long&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source_info</span> <span class="ow">or</span> <span class="s2">&quot;city&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source_info</span> \
+            <span class="ow">or</span> <span class="s2">&quot;state&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source_info</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unable to fetch location info for address </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Unable to fetch location info for address </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+        <span class="n">destination_info</span> <span class="o">=</span> <span class="n">map_generator_obj</span><span class="o">.</span><span class="n">getLocationInfo</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">destination_info</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s2">&quot;lat&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">destination_info</span> <span class="ow">or</span> <span class="s2">&quot;long&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">destination_info</span> <span class="ow">or</span> <span class="s2">&quot;city&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">destination_info</span> \
+            <span class="ow">or</span> <span class="s2">&quot;state&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">destination_info</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unable to fetch location info for address </span><span class="si">{</span><span class="n">destination</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Unable to fetch location info for address </span><span class="si">{</span><span class="n">destination</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+
+    
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong in parsing data with error </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Something went wrong in parsing data with error </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+
+    <span class="c1"># Generating the map for city and state</span>
+
+    <span class="n">graph</span><span class="p">,</span> <span class="n">is_generated</span> <span class="o">=</span> <span class="n">map_generator_obj</span><span class="o">.</span><span class="n">generateMap</span><span class="p">(</span><span class="n">source_info</span><span class="p">[</span><span class="s2">&quot;city&quot;</span><span class="p">],</span> <span class="n">source_info</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_generated</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong while trying to fetch map for city </span><span class="si">{</span><span class="n">source_info</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">source_info</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Something went wrong while trying to fetch map for city </span><span class="si">{</span><span class="n">source_info</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">source_info</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+
+
+    <span class="n">nearest_node_source</span><span class="p">,</span> <span class="n">is_source_valid</span> <span class="o">=</span> <span class="n">helper_obj</span><span class="o">.</span><span class="n">validate_location</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">source_info</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">],</span><span class="n">source_info</span><span class="p">[</span><span class="s2">&quot;long&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_source_valid</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Invalid source location. Please try again with different address!!!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Invalid source location. Please try again with different address!!!&quot;</span><span class="p">}</span>
+    <span class="n">nearest_node_destination</span><span class="p">,</span> <span class="n">is_destination_valid</span> <span class="o">=</span> <span class="n">helper_obj</span><span class="o">.</span><span class="n">validate_location</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">destination_info</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">],</span><span class="n">destination_info</span><span class="p">[</span><span class="s2">&quot;long&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_destination_valid</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Invalid destination location. Please try again with different address!!!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Invalid destination location. Please try again with different address!!!&quot;</span><span class="p">}</span>
+
+    
+    <span class="n">route</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">elevation_gain</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># We are using an intelligent algorithm selector to find best algorithm for a specific optimization request</span>
+    <span class="n">algorithm_selector</span> <span class="o">=</span> <span class="n">AlgorithmSelector</span><span class="p">()</span>
+    <span class="n">route</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">elevation_gain</span> <span class="o">=</span> <span class="n">algorithm_selector</span><span class="o">.</span><span class="n">pick_algorithm</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">nearest_node_source</span><span class="p">,</span> <span class="n">nearest_node_destination</span><span class="p">,</span> <span class="n">percentage_length</span><span class="p">,</span> <span class="n">max_min</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">route</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">dist</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">elevation_gain</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Something went wrong while trying to fetch required metrices for the given input&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Something went wrong while trying to fetch required metrices for the given input!!! please try with a different input&quot;</span><span class="p">}</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;route&quot;</span><span class="p">:</span><span class="n">route</span><span class="p">,</span>
+        <span class="s2">&quot;distance&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dist</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> mts&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;elevation_gain&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">elevation_gain</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> mts&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:[</span><span class="n">source_info</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">],</span><span class="n">source_info</span><span class="p">[</span><span class="s2">&quot;long&quot;</span><span class="p">]],</span>
+        <span class="s2">&quot;destination&quot;</span><span class="p">:[</span><span class="n">destination_info</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">],</span><span class="n">destination_info</span><span class="p">[</span><span class="s2">&quot;long&quot;</span><span class="p">]]</span>
+
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+ 
+            
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>
