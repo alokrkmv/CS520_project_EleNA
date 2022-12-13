@@ -44,32 +44,36 @@ def malformed_data():
 }
 
 @pytest.fixture
-def graph():
+def generate_map_obj():
+    return GenerateMap()
+
+
+@pytest.fixture
+def graph(generate_map_obj):
     '''Fetch the graph of Amherst, Mssachusetts. We will be using this graph for testing various functions inside helper
 
     
     '''
-    generate_map_obj = GenerateMap()
     map, _ = generate_map_obj.generateMap("Amherst", "MA")
     return map
 
 @pytest.fixture
-def lat_long_valid():
+def lat_long_valid(generate_map_obj):
     '''Fetch the co-ordinates of a given address which is in the same city
 
 
     '''
-    generate_map_obj = GenerateMap()
+   
     source_info = generate_map_obj.getLocationInfo("138 Brittany Manor Drive, Amherst, MA")
     return source_info["lat"], source_info["long"]
 
 @pytest.fixture
-def lat_long_invalid():
+def lat_long_invalid(generate_map_obj):
     '''Fetch the co-ordinates of a given address which is not in the given city
 
 
     '''
-    generate_map_obj = GenerateMap()
+
     source_info = generate_map_obj.getLocationInfo("19 MYRTLE ST, BOSTON, MA")
     return source_info["lat"], source_info["long"]
 
@@ -89,14 +93,14 @@ def invalid_address():
 
 
 @pytest.fixture
-def get_path(graph,helper_object):
+def get_path(graph,helper_object,generate_map_obj):
     '''A path from source node to destination node
     
     '''
     djikstra_path_finder = DjikstraPathFinder()
     src_address = "138 Brittany Manor Drive, Amherst, MA"
     dest_address = "115 Brittany Manor Drive, Amherst, MA"
-    generate_map_obj = GenerateMap()
+    
     source_info = generate_map_obj.getLocationInfo(src_address)
     destination_info = generate_map_obj.getLocationInfo(dest_address)
 
