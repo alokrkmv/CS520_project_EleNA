@@ -2,6 +2,8 @@ import heapq
 import logging
 from helper import helper
 from path_finder.djikistra_path_finder import DjikstraPathFinder
+from path_finder.path_finder import PathFinderInterface
+
 
 '''
 
@@ -10,7 +12,7 @@ algorithm to find a suitable path satisfiying percetange path length and
 elevation gain requirement of the client
 
 '''
-class AStarPathFinder:
+class AStarPathFinder(PathFinderInterface):
     '''This class implements a modified version of Astar shortest path
         algorithm to find a suitable path satisfiying percetange path length and 
         elevation gain requirement of the client
