@@ -16,16 +16,15 @@
 </head>
 <body>
 <div class="container contact-form">
-<!--            <div class="contact-image">-->
-<!--                <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>-->
-<!--            </div>-->
+
             <form method="post" name="myform" id="myform" class="login-box">
-                <h3>ELENA</h3>
+                <div class="contact-image">
+                <img src="icon.png" alt="rocket_contact"/>
+                </div>
                <div class="row">
                     <div class="col-md-6">
                         <div class="user-box">
-                            <input id="autocomplete_source" name="source" type="text" class="form-control" />
-                            <label>Source Address</label>
+                            <input id="autocomplete_source" name="source" type="text" placeholder="Enter Source Address"/>
                             <script>
                               google.maps.event.addDomListener(window, 'load', initializeAutoSource);
                                 function initializeAutoSource() {
@@ -38,8 +37,7 @@
                             </script>
                         </div>
                         <div class="user-box">
-                            <input id="autocomplete_dest" name="destination" type="text" class="form-control" />
-                            <label>Destination Address</label>
+                            <input id="autocomplete_dest" name="destination" type="text" placeholder="Enter Destination Address"/>
                             <script>
                               google.maps.event.addDomListener(window, 'load', initializeAutoDest);
                                 function initializeAutoDest() {
@@ -51,14 +49,16 @@
                               }
                             </script>
                         </div>
-                        <div class="form-group">
-                            <br><br>
-                            <label class="rad-text ">Elevation Percentage : </label>
+                        <div>
+                            <label class="value"> Limit total distance to <span style="color: #48aaad">125%</span> of the shortest path</label>
                         </div>
 
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
+                            <div class="heading">
+                            <label >Minimise/Maximize Elevation Gain: </label>
+                        </div>
                         <label class="rad-label">
                         <input type="radio" class="rad-input" name="max_min" value="min">
                         <div class="rad-design"></div>
@@ -72,29 +72,34 @@
                         </label>
                     </div>
                         <div class="form-group">
-                            <div class="value">125%</div>
-                            <input id="percentage_length" type="range" min="100" max="200" value="125" name="percentage_length">
+                            <br>
+                        <input id="percentage_length" type="range" min="100" max="200" value="125" name="percentage_length">
+
                             <script>
                                 var elem = document.querySelector('input[type="range"]');
                                 var rangeValue = function(){
                                   var newValue = elem.value;
                                   var target = document.querySelector('.value');
-                                  target.innerHTML = newValue+'%';
+                                  target.innerHTML = 'Limit total distance to <span style="color: #48aaad">' + newValue + '%</span> of the shortest path';
                                 }
                                 elem.addEventListener("input", rangeValue);
                             </script>
                         </div>
                     </div>
                 </div>
-                <br><br><br>
                 <div class="form-group">
-                            <input type="submit" name="btnSubmit" class="button-29" value="Fetch Route" id="submitform"/>
+                    <input type="submit" name="btnSubmit" class="button-29" value="Fetch Route" id="submitform"/>
                 </div>
+                    <div class="row">
+                    <div id="map" class="map"></div>
+                </div>
+                <div>
+                    <label class="heading" id = "res"></label>
+                </div>
+
             </form>
 
-     <div class="form-group">
-        <div id="map" class="map"></div>
-     </div>
+
 
 </div>
 <script src="script.js"></script>

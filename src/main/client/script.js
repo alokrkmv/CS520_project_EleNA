@@ -25,9 +25,10 @@ $(document).ready(function(){
             }
             console.log(routeInMarkers)
             initMap(routeInMarkers)
+            document.getElementById("res").innerHTML = 'Yay! Route found with with distance <span style="color: #48aaad">' + response.distance
+                + '</span> and elevation gain <span style="color: #48aaad">' + response.elevation_gain + '</span>'
          })
-        .catch(/**/);
-
+        .catch();
         e.preventDefault(); //STOP default action
     });
   });
@@ -44,9 +45,10 @@ function FormDataToJSON(FormElement){
 }
 
 function initMap(markers) {
+     console.log(markers)
       var mapOptions = {
-        center: new google.maps.LatLng(markers[markers.length/2].latitude, markers[markers.length/2].longitude),
-        zoom: 12,
+        center: new google.maps.LatLng(markers[~~(markers.length/2)]['latitude'], markers[~~(markers.length/2)]['longitude']),
+        zoom: 13,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
       var map = new google.maps.Map(document.getElementById("map"), mapOptions);
@@ -67,7 +69,7 @@ function initMap(markers) {
                     map: map,
                     icon: {
                         path: google.maps.SymbolPath.CIRCLE,
-                        scale: 0
+                        scale: 2
                     },
                     title: 'Click me'
                 });
