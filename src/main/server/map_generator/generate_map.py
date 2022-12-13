@@ -61,8 +61,8 @@ class GenerateMap:
             params = {}
             params["lat"] =  self.geolocator.geocode(location).latitude
             params["long"] = self.geolocator.geocode(location).longitude
-            params["city"] = location_info[1].strip()
-            params["state"] = location_info[2].strip()
+            params["city"] = location_info[-3].strip()
+            params["state"] = location_info[-2].strip()
             return params
         except Exception as e:
             logging.exception(f"Something went wrong in fetching location info for given location")
