@@ -191,6 +191,7 @@ input[type="range"]::-webkit-slider-thumb:active {
   /* The height is 400 pixels */
   width: 100%;
   /* The width is the width of the web page */
+  background: transparent url('https://tenor.com/view/loading-gif-selphire-gif-25776488') no-repeat center center;
 }
 
 /* CSS */
