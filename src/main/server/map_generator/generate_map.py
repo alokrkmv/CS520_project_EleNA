@@ -93,7 +93,7 @@ class GenerateMap:
                 graph = pkl.load(open(self.file_path,"rb"))
                 try:
                     logging.info(f"Plotting the graph for city {city} state {state}")
-                    self.generateGraphPlot(graph)
+                    # self.generateGraphPlot(graph)
                 except Exception as e:
                     logging.warning(f"Graph generated successfuly however plotting failed!!! Aborting plot generation!!!")
                 finally:
@@ -125,7 +125,8 @@ class GenerateMap:
                 logging.warning(f"Caching the graph failed with error {e}!!")
             finally:
                 try:
-                    self.generateGraphPlot(graph)
+                    # self.generateGraphPlot(graph)
+                    pass
                 except Exception as e:
                     logging.warning(f"Graph generated successfuly however plotting failed!!! Aborting plot generation!!!")
                 finally:
