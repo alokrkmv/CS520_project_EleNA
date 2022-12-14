@@ -19,8 +19,14 @@ The application is structured as a client-server architecture.
 
 Docker commands
 
-docker image build -t elena_image .
+docker image build -t elena_server .
 
-docker run -d -p 8000:8000 --name elena_container elena_image
+docker build -t elena_client .
 
-docker pull alokrkmv12/elena_image:latest
+docker run -d -p 8000:8000 --name elena_server elena_server
+
+docker run -d -p 81:80 --name elena_client_container elena_client
+
+docker pull alokrkmv12/elena_server:latest
+
+docker pull alokrkmv12/elena_client:latest
