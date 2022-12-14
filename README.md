@@ -22,3 +22,5 @@ Docker commands
 docker image build -t elena_image .
 
 docker run -d -p 8000:8000 --name elena_container elena_image
+
+docker pull alokrkmv12/elena_image:latest
