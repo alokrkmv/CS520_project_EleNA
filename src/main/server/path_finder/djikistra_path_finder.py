@@ -54,7 +54,6 @@ class DjikstraPathFinder(PathFinderInterface):
         if len(coord) <= 25:
             return coord
         coord_len = len(coord)
-        print(coord)
 
         new_coords = []
 
@@ -182,6 +181,7 @@ class DjikstraPathFinder(PathFinderInterface):
             is_max = True
         helper_obj = helper()
         
+        path_direct = self.get_shortest_path(graph, start_node, end_node)
         min_distance = helper_obj.route_length(graph, self.get_shortest_path(graph, start_node, end_node))
         all_path = {}
 
@@ -234,9 +234,15 @@ class DjikstraPathFinder(PathFinderInterface):
         else:
             final_path = all_path[min_elevation]
             
-            
-
-        gat_path_lat_long = self.clean_coordinates(self.get_coordinates(graph, final_path))
+        
+        if not is_max:
+            gat_path_lat_long = self.clean_coordinates(self.get_coordinates(graph, path_direct))
+            if len(gat_path_lat_long)==0:
+                gat_path_lat_long = self.get_coordinates(graph, path_direct)
+        else:
+            gat_path_lat_long = self.clean_coordinates(self.get_coordinates(graph, final_path))
+            if len(gat_path_lat_long)==0:
+                gat_path_lat_long = self.get_coordinates(graph, final_path)
         get_path_length = self.get_path_length(graph, final_path)
         get_path_elevation = self.get_net_elevations(graph, final_path)
         
