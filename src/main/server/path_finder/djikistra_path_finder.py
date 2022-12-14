@@ -2,6 +2,7 @@ import heapq
 import logging
 from helper import helper
 from path_finder.path_finder import PathFinderInterface
+import math
 
 class DjikstraPathFinder(PathFinderInterface):
     '''This class implements a modified version of Djikistra shortest path
@@ -49,6 +50,21 @@ class DjikstraPathFinder(PathFinderInterface):
             coord.append((graph.nodes[node]['y'], graph.nodes[node]['x']))
         return coord
 
+    def clean_coordinates(self,coord):
+        if len(coord) <= 25:
+            return coord
+        coord_len = len(coord)
+        print(coord)
+
+        new_coords = []
+
+        step = math.ceil(coord_len/23)
+        for i in range(0, coord_len - 1, step):
+            new_coords.append(coord[i])
+
+        new_coords.append(coord[coord_len - 1])
+        return new_coords
+        
     
     def get_path_length(self, graph , path):
         '''This function calculates the path length of a given path
@@ -219,7 +235,7 @@ class DjikstraPathFinder(PathFinderInterface):
             
             
 
-        gat_path_lat_long = self.get_coordinates(graph, final_path)
+        gat_path_lat_long = self.clean_coordinates(self.get_coordinates(graph, final_path))
         get_path_length = self.get_path_length(graph, final_path)
         get_path_elevation = self.get_net_elevations(graph, final_path)
         
