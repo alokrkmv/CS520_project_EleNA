@@ -2,7 +2,8 @@ var routeInMarkers = []
 
 $(document).ready(function(){
     $('#submitform').click(function(e) {
-        document.getElementById("map").style.visibility = 'visible';
+        document.getElementById("map").style.visibility = 'hidden';
+        document.getElementById("loader").style.display = 'block';
         routeInMarkers = []
         var ReceivedJSON = (FormDataToJSON(document.getElementById("myform")));
         delete ReceivedJSON['txtMsg'];
@@ -18,7 +19,6 @@ $(document).ready(function(){
         })
         .then(response => response.json())
         .then(response => {
-            console.log(response);
             for (let item of response.route) {
               temp = {}
               temp['latitude'] = item[0].toString()
@@ -47,61 +47,20 @@ function FormDataToJSON(FormElement){
 }
 
 function initMap(markers) {
-//     console.log(markers)
-//      var mapOptions = {
-//        center: new google.maps.LatLng(markers[~~(markers.length/2)]['latitude'], markers[~~(markers.length/2)]['longitude']),
-//        zoom: 13,
-//        mapTypeId: google.maps.MapTypeId.ROADMAP
-//      };
-//      var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-//      var positions = [];
-//      var icon;
-//      var marker;
-//      for (var i = 0; i < markers.length; i++) {
-//          positions.push(new google.maps.LatLng(markers[i].latitude, markers[i].longitude))
-//          if (i == 0 || i == markers.length - 1) {
-//                marker = new google.maps.Marker({
-//                    position: positions[i],
-//                    map: map,
-//                    title: 'Click me'
-//                });
-//            } else {
-//                marker = new google.maps.Marker({
-//                    position: positions[i],
-//                    map: map,
-//                    icon: {
-//                        path: google.maps.SymbolPath.CIRCLE,
-//                        scale: 0
-//                    },
-//                    title: 'Click me'
-//                });
-//            }
-//        }
-//
-//        //Intialize the Path Array
-//        var path = new google.maps.MVCArray();
-//        //Intialize the Direction Service
-//        var service = new google.maps.DirectionsService();
-//        var flightPath = new google.maps.Polyline({
-//          path: positions,
-//          geodesic: true,
-//          strokeColor: '#4986E7'
-//        });
-//        flightPath.setMap(map);
-
-
-        var mapOptions = {
+  var mapOptions = {
         center: new google.maps.LatLng(markers[~~(markers.length/2)]['latitude'], markers[~~(markers.length/2)]['longitude']),
         zoom: 13,
         mapTypeId: google.maps.MapTypeId.ROADMAP
          };
         var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        document.getElementById("loader").style.display = 'none';
+        document.getElementById("map").style.visibility = 'visible';
+
         var directionsDisplay;
         var directionsService = new google.maps.DirectionsService();
 
         directionsDisplay = new google.maps.DirectionsRenderer();
         directionsDisplay.setMap(map);
-
 
         var startPoint;
         var endPoint;
@@ -121,8 +80,7 @@ function initMap(markers) {
             waypts.push(new google.maps.LatLng(markers[i].latitude, markers[i].longitude))
         }
 
-
-        for (var i = 0, parts = [], max = 8 - 1; i < waypts.length; i = i + max)
+        for (var i = 0, parts = [], max = 20 - 1; i < waypts.length; i = i + max)
             parts.push(waypts.slice(i, i + max + 1));
 
         // Callback function to process service results
@@ -153,28 +111,5 @@ function initMap(markers) {
             // Send request
             directionsService.route(service_options, service_callback);
         }
-//
-//        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-//            return function() {
-//                infowindow.setContent("Name :"+markers[i].name+","+"<br>"+"Date & Time :"+markers[i].date+", "+markers[i].time+","+"<br>"+"Location :"+markers[i].address);
-//                infowindow.open(map, marker);
-//            }
-//        })(marker, i));
-//        }
-//        calcRoute(startPoint, endPoint, waypts);
-//        //add this function
-//        function calcRoute(start,end,waypts) {
-//            var request = {
-//                origin: start,
-//                destination: end,
-//                waypoints: waypts,
-//                travelMode: google.maps.DirectionsTravelMode.DRIVING
-//            };
-//            directionsService.route(request, function(response, status) {
-//            if (status == google.maps.DirectionsStatus.OK) {
-//                directionsDisplay.setDirections(response);
-//            }
-//            });
-//        }
 }
 
