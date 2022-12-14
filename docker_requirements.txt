@@ -1,0 +1,9 @@
+Flask
+geopy
+osmnx
+scikit-learn
+Flask-Cors
+sphinx
+sphinx-rtd-theme
+sphinx-press-theme
+pytest

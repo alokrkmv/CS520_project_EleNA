@@ -13,7 +13,7 @@ $(document).ready(function(){
         var jsonObj = {};
         jsonObj.data = ReceivedJSON;
         console.log(JSON.stringify(jsonObj));
-        fetch("http://localhost:8000/fetch_route", {
+        fetch("http://0.0.0.0:8000/fetch_route", {
             method: "POST",
             body: JSON.stringify(jsonObj),
             headers: {
