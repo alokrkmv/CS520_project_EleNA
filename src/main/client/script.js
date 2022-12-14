@@ -2,9 +2,6 @@ var routeInMarkers = []
 
 $(document).ready(function(){
     $('#submitform').click(function(e) {
-        if(e.which() == '13') {
-            e.preventDefault();
-        }
         routeInMarkers = []
         var ReceivedJSON = (FormDataToJSON(document.getElementById("myform")));
         delete ReceivedJSON['txtMsg'];
