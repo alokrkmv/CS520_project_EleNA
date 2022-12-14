@@ -133,7 +133,7 @@ class AStarPathFinder(PathFinderInterface):
                         path_elevation = -1*elevation_gain
 
                     path_length = self.djikstra.get_path_length(graph, path)
-                    coordinates = self.get_coordinates(graph, path)
+                    coordinates = self.djikstra.clean_coordinates(self.get_coordinates(graph, path))
                     heapq.heappush(all_routes, (path_elevation, path_length, coordinates))
 
                     cost_martix[current]['g'] = float('inf')
