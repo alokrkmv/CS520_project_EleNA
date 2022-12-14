@@ -37,7 +37,7 @@
                             </script>
                         </div>
                         <div class="user-box">
-                            <input id="autocomplete_dest" name="destination" type="text" placeholder="Enter Destination Address"/>
+                            <input id="autocomplete_dest" name="destination" type="text" placeholder="Enter Destination Address" required/>
                             <script>
                               google.maps.event.addDomListener(window, 'load', initializeAutoDest);
                                 function initializeAutoDest() {
@@ -60,7 +60,7 @@
                             <label >Minimise/Maximize Elevation Gain: </label>
                         </div>
                         <label class="rad-label">
-                        <input type="radio" class="rad-input" name="max_min" value="min">
+                        <input type="radio" class="rad-input" name="max_min" value="min" checked>
                         <div class="rad-design"></div>
                         <div class="rad-text">Min</div>
                         </label>

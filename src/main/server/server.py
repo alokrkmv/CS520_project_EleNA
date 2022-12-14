@@ -20,7 +20,7 @@ CORS(app)
 
 @app.route("/fetch_route",methods=["POST"])
 def fetch_route():
-    '''This is a POST API that takes the gives most optimal route data for a hicker or biker based on their elevation preference
+    '''This is a POST API that takes the gives most optimal route data for a hiker or biker based on their elevation preference
     
     Request: 
         "data":{
@@ -59,7 +59,7 @@ def fetch_route():
         try:
             if not helper_obj.validate_input(data_dict):
                 response_dict = {
-                    "message":"Invalid input!!! Make sure that the request body is valid",
+                    "message":"Invalid input!!! Make sure to enter all fields",
                     "valid_request_body_template":{
                         "source":"<required_field_str>, (<address, city, state>), (eg: 138 Brittany Manor Drive, Amherst, MA)",
                         "destination": "<required_field_str, (<address, city, state>), (1040 N Pleasant St, Amherst, MA)>",

@@ -63,6 +63,7 @@ class DjikstraPathFinder(PathFinderInterface):
             new_coords.append(coord[i])
 
         new_coords.append(coord[coord_len - 1])
+        print(len(new_coords))
         return new_coords
         
     
