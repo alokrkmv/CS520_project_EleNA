@@ -2,6 +2,8 @@ var routeInMarkers = []
 
 $(document).ready(function(){
     $('#submitform').click(function(e) {
+        document.getElementById("map").style.visibility = 'hidden';
+        document.getElementById("loader").style.display = 'block';
         routeInMarkers = []
         var ReceivedJSON = (FormDataToJSON(document.getElementById("myform")));
         delete ReceivedJSON['txtMsg'];
@@ -45,45 +47,69 @@ function FormDataToJSON(FormElement){
 }
 
 function initMap(markers) {
-     console.log(markers)
-      var mapOptions = {
+  var mapOptions = {
         center: new google.maps.LatLng(markers[~~(markers.length/2)]['latitude'], markers[~~(markers.length/2)]['longitude']),
         zoom: 13,
         mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-      var positions = [];
-      var icon;
-      var marker;
-      for (var i = 0; i < markers.length; i++) {
-          positions.push(new google.maps.LatLng(markers[i].latitude, markers[i].longitude))
-          if (i == 0 || i == markers.length - 1) {
+         };
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        document.getElementById("loader").style.display = 'none';
+        document.getElementById("map").style.visibility = 'visible';
+
+        var directionsDisplay;
+        var directionsService = new google.maps.DirectionsService();
+
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        directionsDisplay.setMap(map);
+
+        var startPoint;
+        var endPoint;
+        var waypts = [];
+
+        var infowindow = new google.maps.InfoWindow();
+        var i;
+
+        for (i = 0; i < markers.length; i++) {
+            if (i == 0 || i == markers.length - 1) {
                 marker = new google.maps.Marker({
-                    position: positions[i],
-                    map: map,
-                    title: 'Click me'
-                });
-            } else {
-                marker = new google.maps.Marker({
-                    position: positions[i],
-                    map: map,
-                    icon: {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 2
-                    },
-                    title: 'Click me'
+                position: new google.maps.LatLng(markers[i].latitude, markers[i].longitude),
+                map: map,
+                label: markers[i].count
                 });
             }
+            waypts.push(new google.maps.LatLng(markers[i].latitude, markers[i].longitude))
         }
-        //Intialize the Path Array
-        var path = new google.maps.MVCArray();
-        //Intialize the Direction Service
-        var service = new google.maps.DirectionsService();
-        var flightPath = new google.maps.Polyline({
-          path: positions,
-          geodesic: true,
-          strokeColor: '#4986E7'
-        });
-        flightPath.setMap(map);
+
+        for (var i = 0, parts = [], max = 20 - 1; i < waypts.length; i = i + max)
+            parts.push(waypts.slice(i, i + max + 1));
+
+        // Callback function to process service results
+        var service_callback = function(response, status) {
+            if (status != 'OK') {
+                console.log('Directions request failed due to ' + status);
+                return;
+            }
+            var renderer = new google.maps.DirectionsRenderer;
+            renderer.setMap(map);
+            renderer.setOptions({ suppressMarkers: true, preserveViewport: true });
+            renderer.setDirections(response);
+        };
+
+        // Send requests to service to get route (for stations count <= 25 only one request will be sent)
+        for (var i = 0; i < parts.length; i++) {
+            // Waypoints does not include first station (origin) and last station (destination)
+            var waypoints = [];
+            for (var j = 1; j < parts[i].length - 1; j++)
+                waypoints.push({location: parts[i][j], stopover: false});
+            // Service options
+            var service_options = {
+                origin: parts[i][0],
+                destination: parts[i][parts[i].length - 1],
+                waypoints: waypoints,
+                travelMode: 'WALKING'
+            };
+            // Send request
+            directionsService.route(service_options, service_callback);
+        }
 }
 

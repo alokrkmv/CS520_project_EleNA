@@ -1,5 +1,5 @@
 html {
-  height: 150%;
+  height: 200%;
 }
 body {
   margin:0;
@@ -10,9 +10,9 @@ body {
 
 .login-box {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
-  width: 70%;
+  width: 72%;
   padding: 20px;
   margin-top: 20%;
   transform: translate(-50%, -50%);
@@ -26,7 +26,7 @@ body {
     background: #fff;
     margin-top: 20%;
     margin-bottom: 5%;
-    width: 70%;
+    width: 80%;
     height: 78%;
 }
 .contact-image{
@@ -92,7 +92,7 @@ input[type="range"] {
   display: block;
   -webkit-appearance: none;
   background-color: #bdc3c7;
-  width: 90%;
+  width: 100%;
   height: 5px;
   margin-top: 20px;
   margin-right: 10px;
@@ -212,6 +212,7 @@ input[type="range"]::-webkit-slider-thumb:active {
   line-height: 1;
   margin-bottom:30px;
   list-style: none;
+  margin-top: 5%;
   overflow: hidden;
   padding-left: 16px;
   padding-right: 16px;
@@ -250,7 +251,14 @@ input[type="range"]::-webkit-slider-thumb:active {
 .login-box .user-box {
   position: relative;
   border: 0;
+}
 
+.loader {
+    margin-top: 20%;
+    height: 120px;
+  /* The height is 400 pixels */
+   width: 100%;
+   background: transparent url('ajax.gif') no-repeat center center;
 }
 
 .login-box form a {

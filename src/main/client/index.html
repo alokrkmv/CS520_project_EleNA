@@ -73,8 +73,7 @@
                     </div>
                         <div class="form-group">
                             <br>
-                        <input id="percentage_length" type="range" min="100" max="200" value="125" name="percentage_length">
-
+                        <input id="percentage_length" type="range" min="100" max="300" value="125" name="percentage_length">
                             <script>
                                 var elem = document.querySelector('input[type="range"]');
                                 var rangeValue = function(){
@@ -91,7 +90,8 @@
                     <input type="submit" name="btnSubmit" class="button-29" value="Fetch Route" id="submitform"/>
                 </div>
                     <div class="row">
-                    <div id="map" class="map"></div>
+                        <div id="loader" class="loader" style="display: none;"></div>
+                    <div id="map" class="map" style="visibility: hidden;"></div>
                 </div>
                 <div>
                     <label class="heading" id = "res"></label>
