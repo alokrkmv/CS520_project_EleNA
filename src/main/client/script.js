@@ -132,9 +132,21 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, source, 
         if (status == google.maps.DirectionsStatus.OK) {
           directionsDisplay.setDirections(response);
         } else {
-          window.alert('Directions request failed due to ' + status);
-          document.getElementById("res").innerHTML = '<span style="color: #C41E3A"> No Route Found';
-        }
+            directionsService.route({
+                origin: source,
+                destination: destination,
+                waypoints: waypoints,
+                travelMode: google.maps.TravelMode.DRIVING
+              }, function(response, status) {
+                    if (status == google.maps.DirectionsStatus.OK) {
+                      directionsDisplay.setDirections(response);
+                    } else {
+                      window.alert('Directions request failed due to ' + status);
+                      document.getElementById("res").innerHTML = '<span style="color: #C41E3A"> No Route Found';
+                    }
+                }
+              );
+            }
       });
       document.getElementById("loader").style.display = 'none';
       document.getElementById("map").style.visibility = 'visible';
