@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>path_finder.a_star_path_finder</title>
+    
+          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../_static/theme-vendors.js"></script> -->
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../modules.html#server">server</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../helper.html" class="reference internal ">helper module</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../map_generator.html" class="reference internal ">map_generator package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../path_finder.html" class="reference internal ">path_finder package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>path_finder.a_star_path_finder</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <h1>Source code for path_finder.a_star_path_finder</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">heapq</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">helper</span> <span class="kn">import</span> <span class="n">helper</span>
+<span class="kn">from</span> <span class="nn">path_finder.djikistra_path_finder</span> <span class="kn">import</span> <span class="n">DjikstraPathFinder</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">This class implements a modified version of Astar shortest path</span>
+<span class="sd">algorithm to find a suitable path satisfiying percetange path length and </span>
+<span class="sd">elevation gain requirement of the client</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="AStarPathFinder"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder">[docs]</a><span class="k">class</span> <span class="nc">AStarPathFinder</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;This class implements a modified version of Astar shortest path</span>
+<span class="sd">        algorithm to find a suitable path satisfiying percetange path length and </span>
+<span class="sd">        elevation gain requirement of the client</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span> <span class="o">=</span> <span class="n">DjikstraPathFinder</span><span class="p">()</span>
+      
+
+<div class="viewcode-block" id="AStarPathFinder.heuristic_function"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.heuristic_function">[docs]</a>    <span class="k">def</span> <span class="nf">heuristic_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">graph</span><span class="p">,</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;As A* is a heuristic based path finder algorithm we need to have a heuristic function. This is a simple heuristic</span>
+<span class="sd">            function which finds shortest possible distance (Eculedian distance) between source and destination</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            start (osmnx.graph.node): First Node</span>
+<span class="sd">            end (osmnx.graph.node): Second Node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Eculidian distance between two nodes</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="p">((</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">end</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">end</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span></div>
+    
+<div class="viewcode-block" id="AStarPathFinder.find_next_node"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.find_next_node">[docs]</a>    <span class="k">def</span> <span class="nf">find_next_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nodes</span><span class="p">,</span> <span class="n">node_costs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function finds the next node with mimimum cost from the current node</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nodes (list[node]): An array of nodes</span>
+<span class="sd">            node_cost (dict): Cost metrix</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            osmnx.graph.node: Returns the next node with minimum cost</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">min_cost</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="n">next_node</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">node_costs</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">cost</span> <span class="o">&lt;</span> <span class="n">min_cost</span><span class="p">:</span>
+                <span class="n">min_cost</span> <span class="o">=</span> <span class="n">cost</span>
+                <span class="n">next_node</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="k">return</span> <span class="n">next_node</span></div>
+
+<div class="viewcode-block" id="AStarPathFinder.get_coordinates"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.get_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">get_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function finds x and y coordinates for each node in the path</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            path list[node]: A list of nodes from source to destination representing the path from source to destination</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            coord: Returns an array of tuples where each tuple corresponds to x and y co-ordinate of the corrsponding path node</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">coord</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">coord</span></div>
+
+<div class="viewcode-block" id="AStarPathFinder.get_path"><a class="viewcode-back" href="../../path_finder.html#path_finder.a_star_path_finder.AStarPathFinder.get_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">percentage_length</span><span class="p">,</span> <span class="n">min_max_gain</span><span class="p">):</span>
+
+        <span class="sd">&#39;&#39;&#39;This function returns most optimal path between a given source and destination node for a given input paramater</span>
+<span class="sd">            We are using a modified version of A* to find the most optimal path for given source and destination combination </span>
+<span class="sd">            considering user&#39;s preference for elevation gain and maximum path length.</span>
+<span class="sd">            Distance from one node to another is the edge weight</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            start (osmnx.graph.node): Source node</span>
+<span class="sd">            end (osmnx.graph.node): Destination node</span>
+<span class="sd">            percentage_length (int): Maximum percentage length above the shortest path length user is willing to go</span>
+<span class="sd">            min_max_gain (str): User&#39;s choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain</span>
+<span class="sd">            min means user wants to minimize elevation gain</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user&#39;s input</span>
+<span class="sd">            float: length of the path</span>
+<span class="sd">            float: elevation gain across the path</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">is_max</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">min_max_gain</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
+            <span class="n">is_max</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># get the shortest path</span>
+        <span class="n">min_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span><span class="o">.</span><span class="n">get_path_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span><span class="o">.</span><span class="n">get_shortest_path</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">))</span>
+
+        <span class="n">begin</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">terminate</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="n">begin</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+
+        <span class="n">parent</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">parent</span><span class="p">[</span><span class="n">start</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">cost_martix</span> <span class="o">=</span> <span class="p">{}</span> 
+        <span class="n">cost_martix</span><span class="p">[</span><span class="n">start</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">cost_martix</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">cost_martix</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="s1">&#39;h&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">all_routes</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">while</span> <span class="n">begin</span><span class="p">:</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_next_node</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span><span class="n">cost_martix</span><span class="p">)</span>
+            <span class="n">begin</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">current</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">cost_martix</span><span class="p">[</span><span class="n">current</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">percentage_length</span><span class="o">*</span><span class="n">min_distance</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="p">:</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">path_temp</span> <span class="o">=</span> <span class="n">current</span>
+                    <span class="k">while</span> <span class="n">path_temp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_temp</span><span class="p">)</span>
+                        <span class="n">path_temp</span> <span class="o">=</span> <span class="n">parent</span><span class="p">[</span><span class="n">path_temp</span><span class="p">]</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                    <span class="n">elevation_gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span><span class="o">.</span><span class="n">get_net_elevations</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+                    <span class="n">path_elevation</span> <span class="o">=</span> <span class="n">elevation_gain</span>
+                    <span class="k">if</span> <span class="n">is_max</span><span class="p">:</span>
+                        <span class="n">path_elevation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">elevation_gain</span>
+
+                    <span class="n">path_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">djikstra</span><span class="o">.</span><span class="n">get_path_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+                    <span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_coordinates</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+                    <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">all_routes</span><span class="p">,</span> <span class="p">(</span><span class="n">path_elevation</span><span class="p">,</span> <span class="n">path_length</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">))</span>
+
+                    <span class="n">cost_martix</span><span class="p">[</span><span class="n">current</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">terminate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">neigbhor</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">current</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">neigbhor</span> <span class="ow">in</span> <span class="n">terminate</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">neigbhor</span> <span class="ow">in</span> <span class="n">begin</span><span class="p">:</span>
+                        <span class="n">old_cost</span> <span class="o">=</span> <span class="n">cost_martix</span><span class="p">[</span><span class="n">neigbhor</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span>
+                        <span class="n">new_cost</span> <span class="o">=</span> <span class="n">cost_martix</span><span class="p">[</span><span class="n">current</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">current</span><span class="p">,</span> <span class="n">neigbhor</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">old_cost</span><span class="o">&gt;</span><span class="n">new_cost</span><span class="p">:</span>
+                            <span class="n">cost_martix</span><span class="p">[</span><span class="n">neigbhor</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_cost</span>
+                            <span class="n">parent</span><span class="p">[</span><span class="n">neigbhor</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">g_cost</span> <span class="o">=</span> <span class="n">cost_martix</span><span class="p">[</span><span class="n">current</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">current</span><span class="p">,</span> <span class="n">neigbhor</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+                        <span class="n">h_cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heuristic_function</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+
+                        <span class="n">parent</span><span class="p">[</span><span class="n">neigbhor</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span>
+                        <span class="n">cost_martix</span><span class="p">[</span><span class="n">neigbhor</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                        <span class="n">cost_martix</span><span class="p">[</span><span class="n">neigbhor</span><span class="p">][</span><span class="s1">&#39;g&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">g_cost</span>
+                        <span class="n">cost_martix</span><span class="p">[</span><span class="n">neigbhor</span><span class="p">][</span><span class="s1">&#39;h&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h_cost</span>
+                        <span class="n">begin</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">neigbhor</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">all_routes</span><span class="p">:</span>
+            <span class="n">path_elevation</span><span class="p">,</span> <span class="n">path_length</span><span class="p">,</span> <span class="n">path_details</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">all_routes</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_max</span><span class="p">:</span> 
+                <span class="n">path_elevation</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">return</span> <span class="n">path_details</span><span class="p">,</span> <span class="n">path_length</span><span class="p">,</span> <span class="n">path_elevation</span>
+        <span class="k">return</span> <span class="kc">None</span></div></div>
+
+
+        
+    
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

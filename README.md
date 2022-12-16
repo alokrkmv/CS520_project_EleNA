@@ -23,10 +23,10 @@ docker image build -t elena_server .
 
 docker build -t elena_client .
 
-docker run -d -p 8000:8000 --name elena_server elena_server
+docker run -d -p 8000:8000 --name elena_server_container elena_server
 
 docker run -d -p 81:80 --name elena_client_container elena_client
 
-docker pull alokrkmv12/elena_server:latest
+docker pull alokrkmv12/elena_server:0.2
 
-docker pull alokrkmv12/elena_client:latest
+docker pull alokrkmv12/elena_client:0.1

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>path_finder.djikistra_path_finder</title>
+    
+          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../_static/theme-vendors.js"></script> -->
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <span class="site-name">EleNa Documentation</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../modules.html#server">server</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../helper.html" class="reference internal ">helper module</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../map_generator.html" class="reference internal ">map_generator package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../path_finder.html" class="reference internal ">path_finder package</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../server.html" class="reference internal ">server module</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>path_finder.djikistra_path_finder</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <h1>Source code for path_finder.djikistra_path_finder</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">heapq</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">helper</span> <span class="kn">import</span> <span class="n">helper</span>
+
+<div class="viewcode-block" id="DjikstraPathFinder"><a class="viewcode-back" href="../../path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder">[docs]</a><span class="k">class</span> <span class="nc">DjikstraPathFinder</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;This class implements a modified version of Djikistra shortest path</span>
+<span class="sd">        algorithm to find a suitable path satisfiying percetange path length and </span>
+<span class="sd">        elevation gain requirement of the client</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+   
+<div class="viewcode-block" id="DjikstraPathFinder.generate_path_array"><a class="viewcode-back" href="../../path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.generate_path_array">[docs]</a>    <span class="k">def</span> <span class="nf">generate_path_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reverse_path</span><span class="p">,</span> <span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Generated path from a key-value pair parent child dict for a given source and destination node</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reverse_path(dict[node]:node): A key value pair dict with key as child node and value as parent node</span>
+<span class="sd">            start_node(osmnx.graph.node): Source Node</span>
+<span class="sd">            end_node(osmnx.graph.node): Destination Node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[(float,float)]: A list of tuple reprsenting co-ordinates of each node of the generated path</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">end_node</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">end_node</span><span class="o">!=</span><span class="n">start_node</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">reverse_path</span><span class="p">[</span><span class="n">end_node</span><span class="p">]</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+            <span class="n">end_node</span> <span class="o">=</span> <span class="n">temp</span>
+        <span class="k">return</span> <span class="n">path</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="DjikstraPathFinder.get_coordinates"><a class="viewcode-back" href="../../path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">get_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This functions fetches x and y co-ordinates for each node of the path</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            path list[node]: A list of nodes from source to destination representing the path from source to destination</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list[(float,float)]: A list of tuple reprsenting co-ordinates of each node of the path</span>
+<span class="sd">        </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">coord</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">coord</span></div>
+
+    
+<div class="viewcode-block" id="DjikstraPathFinder.get_path_length"><a class="viewcode-back" href="../../path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_path_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_path_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function calculates the path length of a given path</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            path list[node]: A list of nodes from source to destination representing the path from source to destination</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Length of the entire path.</span>
+<span class="sd">        </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">path_length</span> <span class="o">=</span> <span class="mi">0</span>
+      
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+            <span class="n">path_length</span> <span class="o">+=</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">path_length</span></div>
+
+    
+    
+<div class="viewcode-block" id="DjikstraPathFinder.get_elevation_gain"><a class="viewcode-back" href="../../path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_elevation_gain">[docs]</a>    <span class="k">def</span> <span class="nf">get_elevation_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function calculates elevation gain between two nodes</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            start_node (osmnx.graph.node): First Node</span>
+<span class="sd">            end_node (osmnx.graph.node): Second Node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The elevation gain between the two given nodes</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">start_node</span> <span class="o">==</span> <span class="n">end_node</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">start_node</span><span class="p">][</span><span class="s1">&#39;elevation&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">end_node</span><span class="p">][</span><span class="s1">&#39;elevation&#39;</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="DjikstraPathFinder.get_net_elevations"><a class="viewcode-back" href="../../path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_net_elevations">[docs]</a>    <span class="k">def</span> <span class="nf">get_net_elevations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function calculates net elevation gain from source to destination while traversing a given path</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            path list[node]: A list of nodes from source to destination representing the path from source to destination</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The net elevation gain that can be achieved while traversing the given path </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">elevation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">curr_elevation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elevation_gain</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">path</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">elevation</span> <span class="o">+=</span> <span class="n">curr_elevation</span> <span class="k">if</span> <span class="n">curr_elevation</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span> 
+        <span class="k">return</span> <span class="n">elevation</span></div>
+
+<div class="viewcode-block" id="DjikstraPathFinder.get_shortest_path"><a class="viewcode-back" href="../../path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_shortest_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_shortest_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">graph</span><span class="p">,</span> <span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function returns shortest path between a given source and destination node</span>
+<span class="sd">            We are using Djikistra algorithm to find shortest path between two nodes.</span>
+<span class="sd">            Distance from one node to another is the edge weight</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            start_node (osmnx.graph.node): Source node</span>
+<span class="sd">            end_node (osmnx.graph.node): Destination node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[nodes]: A list of nodes from source to destination represting the shortest possible path from source to destination</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">heap</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
+        <span class="c1"># Start node will have a weight of zero</span>
+        <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">start_node</span><span class="p">))</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">path</span><span class="p">[</span><span class="n">start_node</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">weights</span><span class="p">[</span><span class="n">start_node</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">curr_cost</span><span class="p">,</span> <span class="n">curr_node</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
+            <span class="c1"># We have found the path no need to traverse further</span>
+            <span class="k">if</span> <span class="n">curr_node</span> <span class="o">==</span> <span class="n">end_node</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">next_node</span><span class="p">,</span><span class="n">_</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">curr_node</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="n">curr_cost</span><span class="o">+=</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_node</span><span class="p">,</span> <span class="n">next_node</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">next_node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">weights</span> <span class="ow">or</span> <span class="n">curr_cost</span><span class="o">&lt;</span><span class="n">weights</span><span class="p">[</span><span class="n">next_node</span><span class="p">]:</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">next_node</span><span class="p">]</span> <span class="o">=</span> <span class="n">curr_cost</span>
+                    <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,(</span><span class="n">curr_cost</span><span class="p">,</span><span class="n">next_node</span><span class="p">))</span>
+                    <span class="n">path</span><span class="p">[</span><span class="n">next_node</span><span class="p">]</span> <span class="o">=</span> <span class="n">curr_node</span>
+                
+        
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_path_array</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DjikstraPathFinder.get_path"><a class="viewcode-back" href="../../path_finder.html#path_finder.djikistra_path_finder.DjikstraPathFinder.get_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span><span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">,</span> <span class="n">percentage_length</span><span class="p">,</span> <span class="n">min_max_gain</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function takes a graph(map of the city), start_node, end_node, percentage path length, </span>
+<span class="sd">           max or min elevation gain and returns path(an array of nodes from source to destination)</span>
+<span class="sd">           elevation gain, path length</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph (osmnx.graph): The graph of the city in which source and destination lies</span>
+<span class="sd">            start_node (osmnx.graph.node): Source node</span>
+<span class="sd">            end_node (osmnx.graph.node): Destination node</span>
+<span class="sd">            percentage_length (int): Maximum percentage length above the shortest path length user is willing to go</span>
+<span class="sd">            min_max_gain (str): User&#39;s choice of minimizing or maximizing elevation gain. max means user intends to maximize elevation gain</span>
+<span class="sd">            min means user wants to minimize elevation gain</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[list[float]]: An array of lat, long pairs denoting the most optimizing path based on user&#39;s input</span>
+<span class="sd">            float: length of the path</span>
+<span class="sd">            float: elevation gain across the path</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">is_max</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">min_max_gain</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
+            <span class="n">is_max</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">helper_obj</span> <span class="o">=</span> <span class="n">helper</span><span class="p">()</span>
+        
+        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">helper_obj</span><span class="o">.</span><span class="n">route_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_shortest_path</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">))</span>
+        <span class="n">all_path</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">percentage_length</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">):</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">elevations</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">weights</span><span class="p">[</span><span class="n">start_node</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">elevations</span><span class="p">[</span><span class="n">start_node</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">heap</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span> <span class="n">start_node</span><span class="p">))</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">path</span><span class="p">[</span><span class="n">start_node</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">while</span> <span class="n">heap</span><span class="p">:</span>
+                <span class="n">elevation</span><span class="p">,</span><span class="n">curr_node</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">curr_node</span> <span class="o">==</span> <span class="n">end_node</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">curr_node</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&lt;=</span> <span class="p">(</span><span class="n">percentage_length</span><span class="o">*</span><span class="n">min_distance</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">next_node</span><span class="p">,</span><span class="n">_</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">curr_node</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">new_cost</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">curr_node</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_node</span><span class="p">,</span> <span class="n">next_node</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+                    <span class="n">curr_elveation</span> <span class="o">=</span> <span class="n">elevations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">curr_node</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">elevation_cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elevation_gain</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">curr_node</span><span class="p">,</span> <span class="n">next_node</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="n">elevation_cost</span> <span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                        <span class="n">curr_elveation</span> <span class="o">+=</span> <span class="n">elevation_cost</span>
+                        
+                    <span class="k">if</span> <span class="n">next_node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">weights</span> <span class="ow">or</span>  <span class="n">new_cost</span> <span class="o">&lt;</span> <span class="n">weights</span><span class="p">[</span><span class="n">next_node</span><span class="p">]</span> <span class="p">:</span>
+                        <span class="n">weights</span><span class="p">[</span><span class="n">next_node</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_cost</span>
+                        <span class="n">elevations</span><span class="p">[</span><span class="n">next_node</span><span class="p">]</span> <span class="o">=</span> <span class="n">curr_elveation</span>
+                        
+                        <span class="k">if</span> <span class="n">is_max</span><span class="p">:</span>
+                            <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">curr_elveation</span><span class="p">,</span> <span class="n">next_node</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,(</span><span class="n">curr_elveation</span><span class="p">,</span> <span class="n">next_node</span><span class="p">))</span>
+                        <span class="n">path</span><span class="p">[</span><span class="n">next_node</span><span class="p">]</span> <span class="o">=</span> <span class="n">curr_node</span>
+            <span class="n">generated_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_path_array</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">)</span>
+            <span class="n">all_path</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_net_elevations</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">generated_path</span><span class="p">)]</span> <span class="o">=</span> <span class="n">generated_path</span>
+        
+        <span class="n">min_elevation</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="n">max_elevation</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span>
+        
+        
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">all_path</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">min_elevation</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_elevation</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">max_elevation</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_elevation</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        
+        
+        <span class="n">final_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">is_max</span><span class="p">:</span>
+            <span class="n">final_path</span> <span class="o">=</span> <span class="n">all_path</span><span class="p">[</span><span class="n">max_elevation</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">final_path</span> <span class="o">=</span> <span class="n">all_path</span><span class="p">[</span><span class="n">min_elevation</span><span class="p">]</span>
+            
+            
+
+        <span class="n">gat_path_lat_long</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_coordinates</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">final_path</span><span class="p">)</span>
+        <span class="n">get_path_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">final_path</span><span class="p">)</span>
+        <span class="n">get_path_elevation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_net_elevations</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">final_path</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">gat_path_lat_long</span><span class="p">,</span> <span class="n">get_path_length</span><span class="p">,</span> <span class="n">get_path_elevation</span></div></div>
+        
+
+    
+
+        
+        
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Team Java.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>
