@@ -38,5 +38,5 @@ for _destination in destinations:
     if not "message" in server_json:
         max_response_times.append({server_json["distance"], post_time_end - post_time_start})
 
-print(min_response_times)
-print(max_response_times)
+print(f"min_reesponse_time:{min_response_times}")
+print(f"max_response_time:{max_response_times}")

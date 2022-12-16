@@ -8,7 +8,7 @@ import networkx as nx
 import pickle as pkl
 import osmnx as ox
 import os
-
+import googlemaps
 
 from geopy.geocoders import Nominatim
 
@@ -59,8 +59,14 @@ class GenerateMap:
         try:
             location_info = location.split(",")
             params = {}
-            params["lat"] =  self.geolocator.geocode(location).latitude
-            params["long"] = self.geolocator.geocode(location).longitude
+           
+   
+
+            gmaps = googlemaps.Client(key='AIzaSyBVdyePhhYFnn5-jJP5jCaO4NBuR_c_ADE')
+
+            geocode_result = gmaps.geocode(location)
+            params["lat"] =  geocode_result[0]["geometry"]["location"]["lat"]
+            params["long"] = geocode_result[0]["geometry"]["location"]["lng"]
             params["city"] = location_info[-3].strip()
             params["state"] = location_info[-2].strip()
             return params
