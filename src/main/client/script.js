@@ -2,45 +2,46 @@ var routeInMarkers = []
 
 $(document).ready(function(){
     $('#submitform').click(function(e) {
-        validateForm()
-        document.getElementById("map").style.display = 'block';
-        document.getElementById("map").style.visibility = 'hidden';
-        document.getElementById("loader").style.display = 'block';
-        document.getElementById("res").innerHTML = '';
-        routeInMarkers = []
-        var ReceivedJSON = (FormDataToJSON(document.getElementById("myform")));
-        delete ReceivedJSON['txtMsg'];
-        var jsonObj = {};
-        jsonObj.data = ReceivedJSON;
-        console.log(JSON.stringify(jsonObj));
-        fetch("http://localhost:8000/fetch_route", {
-            method: "POST",
-            body: JSON.stringify(jsonObj),
-            headers: {
-            "Content-Type": "application/json"
-            }
-        })
-        .then(response => response.json())
-        .then(response => {
-            if (response.hasOwnProperty('message')) {
-              document.getElementById("map").style.display = 'none';
-              document.getElementById("loader").style.display = 'none';
-              console.log(response.message)
-              document.getElementById("res").innerHTML = '<span style="color: #C41E3A">' + response.message;
-            } else {
-                for (let item of response.route) {
-                  temp = {}
-                  temp['latitude'] = item[0].toString()
-                  temp['longitude'] = item[1].toString()
-                  routeInMarkers.push(temp)
+        if (validateForm()) {
+            document.getElementById("map").style.display = 'block';
+            document.getElementById("map").style.visibility = 'hidden';
+            document.getElementById("loader").style.display = 'block';
+            document.getElementById("res`").innerHTML = '';
+            routeInMarkers = []
+            var ReceivedJSON = (FormDataToJSON(document.getElementById("myform")));
+            delete ReceivedJSON['txtMsg'];
+            var jsonObj = {};
+            jsonObj.data = ReceivedJSON;
+            console.log(JSON.stringify(jsonObj));
+            fetch("http://localhost:8000/fetch_route", {
+                method: "POST",
+                body: JSON.stringify(jsonObj),
+                headers: {
+                "Content-Type": "application/json"
                 }
-                console.log(routeInMarkers)
-                initMap(response.source, response.destination, routeInMarkers)
-                document.getElementById("res").innerHTML = 'Yay! Route found with with distance <span style="color: #48aaad">' + response.distance
-                    + '</span> and elevation gain <span style="color: #48aaad">' + response.elevation_gain + '</span>'
-            }
-         })
-        .catch();
+            })
+            .then(response => response.json())
+            .then(response => {
+                if (response.hasOwnProperty('message')) {
+                  document.getElementById("map").style.display = 'none';
+                  document.getElementById("loader").style.display = 'none';
+                  console.log(response.message)
+                  document.getElementById("res").innerHTML = '<span style="color: #C41E3A">' + response.message;
+                } else {
+                    for (let item of response.route) {
+                      temp = {}
+                      temp['latitude'] = item[0].toString()
+                      temp['longitude'] = item[1].toString()
+                      routeInMarkers.push(temp)
+                    }
+                    console.log(routeInMarkers)
+                    initMap(response.source, response.destination, routeInMarkers)
+                    document.getElementById("res").innerHTML = 'Yay! Route found with with distance <span style="color: #48aaad">' + response.distance
+                        + '</span> and elevation gain <span style="color: #48aaad">' + response.elevation_gain + '</span>'
+                }
+             })
+            .catch();
+        }
         e.preventDefault(); //STOP default action
     });
   });
@@ -52,8 +53,8 @@ function validateForm() {
         alert("Please Fill All Required Fields");
     return false;
     }
+    return true
 }
-
 
 function FormDataToJSON(FormElement){
     var formData = new FormData(FormElement);
