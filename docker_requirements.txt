@@ -6,4 +6,5 @@ Flask-Cors
 sphinx
 sphinx-rtd-theme
 sphinx-press-theme
+googlemaps
 pytest
