@@ -98,7 +98,7 @@ class DjikstraPathFinder(PathFinderInterface):
         '''
         if start_node == end_node:
             return 0
-        return graph.nodes[start_node]['elevation'] - graph.nodes[end_node]['elevation']
+        return graph.nodes[end_node]['elevation'] - graph.nodes[start_node]['elevation']
     
     def get_net_elevations(self, graph, path):
         '''This function calculates net elevation gain from source to destination while traversing a given path
@@ -183,7 +183,7 @@ class DjikstraPathFinder(PathFinderInterface):
         path_direct = self.get_shortest_path(graph, start_node, end_node)
         min_distance = helper_obj.route_length(graph, self.get_shortest_path(graph, start_node, end_node))
         all_path = {}
-
+        forbidden_nodes = set()
         for _ in range(100, int(percentage_length)+1,5):
             weights = {}
             elevations = {}
@@ -195,6 +195,11 @@ class DjikstraPathFinder(PathFinderInterface):
             path[start_node] = None
             while heap:
                 elevation,curr_node = heapq.heappop(heap)
+                if weights.get(curr_node,0)> (percentage_length*min_distance)/100:
+                    forbidden_nodes.add(curr_node)
+                    if curr_node in path:
+                        path.pop(curr_node)
+                    continue
                 if curr_node == end_node:
                     if weights.get(curr_node,0)<= (percentage_length*min_distance)/100:
                         break
@@ -206,7 +211,7 @@ class DjikstraPathFinder(PathFinderInterface):
                     if elevation_cost >0:
                         curr_elveation += elevation_cost
                         
-                    if next_node not in weights or  new_cost < weights[next_node] :
+                    if next_node not in weights or  new_cost < weights[next_node]:
                         weights[next_node] = new_cost
                         elevations[next_node] = curr_elveation
                         
