@@ -1,0 +1,92 @@
+{
+	"info": {
+		"_postman_id": "dab2d5c9-bbc9-43d4-ad28-b4ef71be0669",
+		"name": "elena_collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3750092"
+	},
+	"item": [
+		{
+			"name": "http://0.0.0.0:8000/fetch_route",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"// example using pm.response.to.be*",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"",
+							"     pm.response.to.be.ok; // info, success, redirection, clientError,  serverError, are other variants",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json; // this assertion also checks if a body  exists, so the above check is not needed",
+							"});",
+							"",
+							"const jsonData = pm.response.json();",
+							"",
+							"pm.test('Destination present in body', function() {",
+							"  pm.expect(jsonData).to.have.property('destination');",
+							"});",
+							"",
+							"pm.test('Source present in body', function() {",
+							"  pm.expect(jsonData).to.have.property('source');",
+							"});",
+							"",
+							"pm.test('Distance present in body', function() {",
+							"  pm.expect(jsonData).to.have.property('distance');",
+							"});",
+							"",
+							"pm.test('Elevation Gain present', function() {",
+							"  pm.expect(jsonData).to.have.property('elevation_gain');",
+							"});",
+							"",
+							"",
+							"pm.test('Route present', function() {",
+							"  pm.expect(jsonData).to.have.property('route');",
+							"});",
+							"",
+							"",
+							"pm.test('Route length is greater than 0', function() {",
+							"  pm.expect(jsonData.route.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"data\":{\n\t\"source\":\"115 Brittany Manor Drive, Amherst, MA, USA\",\n\t\"destination\": \"138 Brittany Manor Drive, Amherst, MA, USA\",\n\t\"percentage_length\":\"110\",\n\t\"max_min\":\"min\"\n\t\n}\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:8000/fetch_route",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "8000",
+					"path": [
+						"fetch_route"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
