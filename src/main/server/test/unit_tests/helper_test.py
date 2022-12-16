@@ -172,7 +172,7 @@ def test_route_length(helper_object,graph, get_path):
     will pass if expected path length distance varies by 10 mts from actual path length
     
     '''
-    actual_path_length = 125
+    actual_path_length = 250
 
     fetched_path_length = helper_object.route_length(graph, get_path)
 

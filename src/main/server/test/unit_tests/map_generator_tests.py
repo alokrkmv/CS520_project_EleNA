@@ -61,8 +61,10 @@ def test_location_info(generate_map_obj, address):
     params = generate_map_obj.getLocationInfo(address)
     generated_lat = round(params["lat"], 4)
     generated_long = round(params["long"], 4)
-    actual_lat = 42.3494
-    actual_long = -72.5284
+    actual_lat = 42.3500
+    actual_long = -72.5275
+    print(generated_lat)
+    print(generated_long)
     # As we are comparing float values we will compare for some degree of precision rather than exact value
     assert math.isclose(generated_lat, actual_lat, abs_tol=0.0005) == True
     assert math.isclose(generated_long, actual_long, abs_tol=0.0005) == True
