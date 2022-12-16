@@ -27,6 +27,6 @@ docker run -d -p 8000:8000 --name elena_server_container elena_server
 
 docker run -d -p 81:80 --name elena_client_container elena_client
 
-docker pull alokrkmv12/elena_server:0.2
+docker pull alokrkmv12/elena_server:0.3
 
 docker pull alokrkmv12/elena_client:0.1
