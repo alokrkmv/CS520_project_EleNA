@@ -15,3 +15,18 @@ The application is structured as a client-server architecture.
   - Convert the source and destination to Latitudes and Longitudes representation for further processing along with elevation information.
   - Generating a map involviding the source, destination and their genographic neighbourhood.
   - Using above inputs to determine the optimized path and returning a unique path with associated details.
+
+
+Docker commands
+
+docker image build -t elena_server .
+
+docker build -t elena_client .
+
+docker run -d -p 8000:8000 --name elena_server elena_server
+
+docker run -d -p 81:80 --name elena_client_container elena_client
+
+docker pull alokrkmv12/elena_server:latest
+
+docker pull alokrkmv12/elena_client:latest
