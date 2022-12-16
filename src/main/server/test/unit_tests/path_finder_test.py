@@ -166,7 +166,7 @@ def test_get_path_length(get_path,graph,path_finder_object):
     Assertion will return true if the fetched path length is in range of 10 mts of actual_path length
     
     '''
-    actual_path_length = 125
+    actual_path_length = 250
 
     fetched_path_length = path_finder_object.get_path_length(graph,get_path)
 
@@ -177,7 +177,7 @@ def test_net_elevation_gain(get_path_for_elevation,graph,path_finder_object):
     Assertion will return true if elevation gain is in 5 mts of actual elevation gain
     
     '''
-    actual_elevation_gain = 21
+    actual_elevation_gain = 54
 
     fetched_elevation_gain = path_finder_object.get_net_elevations(graph,get_path_for_elevation)
 
@@ -188,7 +188,7 @@ def test_shortest_path_for_nodes(get_path):
     '''Here we are testing for number of nodes in the shortest path and assering it against know value from Google maps API
     
     '''
-    actual_number_of_nodes = 3
+    actual_number_of_nodes = 7
 
 
     assert actual_number_of_nodes == len(get_path)
@@ -198,7 +198,7 @@ def test_shortest_path_for_length(graph,get_path, path_finder_object):
     
     '''
 
-    actual_path_length = 120
+    actual_path_length = 253
 
     fetched_path_length = path_finder_object.get_path_length(graph,get_path)
 
@@ -212,7 +212,7 @@ def test_get_path_djikistra(graph, path_finder_object,get_source_dest_node):
 
     actual_elevation_gain = 96
 
-    actual_path_length = 9224
+    actual_path_length = 9180
 
     nearest_node_source, nearest_node_destination = get_source_dest_node
 
