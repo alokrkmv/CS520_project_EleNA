@@ -49,7 +49,7 @@ We have an exhaustive test suite for our application to make sure that our appli
 
 #### Unit test results:
 
-![Unit test result](https://github.com/alokrkmv/project_EleNA/tree/main/src/main/server/test/unit_tests/test_results)
+![Unit test result](https://github.com/alokrkmv/project_EleNA/blob/main/src/main/server/test/unit_tests/test_results/Screenshot%20from%202022-12-16%2022-39-59.png)
 
 
 #### Integration test for server:
