@@ -49,6 +49,8 @@ We have an exhaustive test suite for our application to make sure that our appli
 
 #### Unit test results:
 
+![Unit test result](https://github.com/alokrkmv/project_EleNA/tree/main/src/main/server/test/unit_tests/test_results)
+
 
 #### Integration test for server:
 Integration test for the server test the entire server at the API level. We are validating response body, status, madantory keys in response etc in our integration test.
@@ -57,7 +59,7 @@ Integration test for the server test the entire server at the API level. We are 
 
 #### Integration test results:
 
-
+![Integration test result](https://github.com/alokrkmv/project_EleNA/blob/main/src/main/server/test/integration_tests/output.png)
 
 
 ## Why our EleNa
@@ -80,6 +82,18 @@ We know there are a lot of EleNas out there so why choose ours. Well we have som
 Our application is open source and code repository can be accessed here: [Github](https://github.com/alokrkmv/project_EleNA) 
 
 ### Documentations
+
+1 ![functional_doc](https://cute-donut-3ca29f.netlify.app/)
+
+2  ![design_doc](https://github.com/alokrkmv/lab-1-the_bazar/blob/main/src/Documentation/Design%20Doc.pdf)
+  
+3 ![user_doc](https://github.com/alokrkmv/project_EleNA/blob/main/Documentation/User_Manual.pdf)
+  
+4 ![evaluation_doc](https://github.com/alokrkmv/project_EleNA/blob/main/Documentation/Evaluation_Document.pdf)
+
+5 ![Presentation](https://github.com/alokrkmv/project_EleNA/blob/main/Documentation/520%20Final%20Presentation.pptx)
+
+6 ![Demo Video](https://github.com/alokrkmv/project_EleNA/blob/main/Documentation/Video_Demonstration.mp4)
 
     
   
