@@ -34,7 +34,7 @@ We know docker is the new craze and to make sure that our application is machine
 
 #### 3. Too much tech Jargans I just want to try the app!!!
 
-Don't fell like setting up on local, just want to try our code!! Well we have got you covered. We have an entire cloud based solution for our application. Our entire application is hosted on cloud with our server hosted on heroku and client on Netlify.
+Don't feel like setting up on local, just want to try our code!! Well we have got you covered. We have an entire cloud based solution for our application. Our entire application is hosted on cloud with our server hosted on heroku and client on Netlify.
 
 To access our cloud based application just visit: ````https://sensational-squirrel-4f30da.netlify.app````
 
