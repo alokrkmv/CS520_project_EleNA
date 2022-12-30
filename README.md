@@ -83,7 +83,7 @@ Our application is open source and code repository can be accessed here: [Github
 
 ### Documentations
 
-1 ![functional_doc](https://cute-donut-3ca29f.netlify.app/)
+1 [functional_doc](https://cute-donut-3ca29f.netlify.app/)
 
 2  ![design_doc](https://github.com/alokrkmv/lab-1-the_bazar/blob/main/src/Documentation/Design%20Doc.pdf)
   
